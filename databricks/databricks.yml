@@ -1,0 +1,17 @@
+bundle:
+  name: aeris
+
+include:
+  - resources/*.yml
+
+variables:
+  warehouse_id:
+    description: SQL warehouse for dashboards
+    default: 5da0413f120f41ed
+
+targets:
+  dev:
+    default: true
+    mode: development
+    workspace:
+      host: https://adb-7405619537081466.6.azuredatabricks.net

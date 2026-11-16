@@ -45,11 +45,28 @@ raw = (spark.readStream.format("cloudFiles")
 - **Proof of exactly-once (demo):** note the Bronze count → drop one new file → run → count grows by exactly that file's rows → run again with no new file → count unchanged.
 - The S3 archive uses the same pattern with `cloudFiles.format = csv` and `header = true`, reading the external location. Fallback if the S3 external location isn't permitted: copy the subset into `landing/batch/openaq_archive/` and read it from the Volume.
 
-## 3. Lakeflow Job `aeris_pipeline` (`databricks/resources/aeris_job.yml`)
+## 3. Lakeflow Job `aeris_pipeline` (`databricks/resources/aeris_pipeline.job.yml`)
+
+As built (9 tasks; Silver stations and weather run in parallel):
 
 ```
-ingest_batch → load_bronze → transform_silver → build_gold → validate_gold → sync_supabase
+ingest_batch → load_bronze ┬→ silver_stations → silver_pollution → gold_daily ┬→ gold_latest → validate_gold → sync_supabase
+                           └→ silver_weather ─────────────────────────────────┘
 ```
+
+| Task | Notebook | Writes |
+|---|---|---|
+| ingest_batch | `01_ingest_batch` | `landing/batch/{stations,weather}` JSON |
+| load_bronze | `02_load_bronze` (Auto Loader) | `bronze.openaq_archive_raw`, `station_raw`, `weather_raw` (+ `openaq_latest_raw`, `cpcb_aqi_raw` once live files exist) |
+| silver_stations | `03a_silver_stations` | `silver.stations` (overwrite, small) |
+| silver_pollution | `03b_silver_pollution` | `silver.pollutant_observations` (**MERGE**, incremental by `bronze_ingested_at`), `silver.quarantine_records` |
+| silver_weather | `03c_silver_weather` | `silver.weather_hourly` (overwrite, small) |
+| gold_daily | `04a_gold_daily` | `gold.station_daily_aqi`, `gold.city_daily_aqi` |
+| gold_latest | `04b_gold_latest` | `gold.station_status`, `latest_city_status`, `pollutant_trends`, `weather_pollution_daily` |
+| validate_gold | `05_validate_gold` | `ops.table_stats`, fails the job on a broken check |
+| sync_supabase | `06_sync_supabase` | Supabase `public.*`, `ops.sync_runs` |
+
+Gold tables are small (5 cities × ~700 days), so they are fully recomputed with `overwrite` each run. That is simple and idempotent. The incremental MERGE showcase is in Silver, where the data is big (~20M raw rows).
 
 | Setting | Value | Why |
 |---|---|---|

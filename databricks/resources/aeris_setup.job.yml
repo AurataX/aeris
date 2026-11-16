@@ -1,0 +1,12 @@
+resources:
+  jobs:
+    aeris_setup:
+      name: aeris_setup
+      description: One-time setup — schemas, reference tables. Safe to rerun.
+      tags:
+        project: aeris
+      performance_target: STANDARD
+      tasks:
+        - task_key: setup
+          notebook_task:
+            notebook_path: ../src/notebooks/00_setup.py

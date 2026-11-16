@@ -1,0 +1,66 @@
+resources:
+  jobs:
+    aeris_pipeline:
+      name: aeris_pipeline
+      description: AERIS ETL — ingest → bronze → silver → gold → validate → sync to Supabase
+      tags:
+        project: aeris
+      performance_target: STANDARD
+      max_concurrent_runs: 1
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+      parameters:
+        - name: batch_id
+          default: "{{job.run_id}}"
+      tasks:
+        - task_key: ingest_batch
+          notebook_task:
+            notebook_path: ../src/notebooks/01_ingest_batch.py
+          max_retries: 2
+          min_retry_interval_millis: 60000
+          timeout_seconds: 1800
+
+        - task_key: load_bronze
+          depends_on: [{task_key: ingest_batch}]
+          notebook_task:
+            notebook_path: ../src/notebooks/02_load_bronze.py
+          timeout_seconds: 3600
+
+        - task_key: silver_stations
+          depends_on: [{task_key: load_bronze}]
+          notebook_task:
+            notebook_path: ../src/notebooks/03a_silver_stations.py
+
+        - task_key: silver_weather
+          depends_on: [{task_key: load_bronze}]
+          notebook_task:
+            notebook_path: ../src/notebooks/03c_silver_weather.py
+
+        - task_key: silver_pollution
+          depends_on: [{task_key: silver_stations}]
+          notebook_task:
+            notebook_path: ../src/notebooks/03b_silver_pollution.py
+          timeout_seconds: 3600
+
+        - task_key: gold_daily
+          depends_on: [{task_key: silver_pollution}]
+          notebook_task:
+            notebook_path: ../src/notebooks/04a_gold_daily.py
+
+        - task_key: gold_latest
+          depends_on: [{task_key: gold_daily}, {task_key: silver_weather}]
+          notebook_task:
+            notebook_path: ../src/notebooks/04b_gold_latest.py
+
+        - task_key: validate_gold
+          depends_on: [{task_key: gold_latest}]
+          notebook_task:
+            notebook_path: ../src/notebooks/05_validate_gold.py
+
+        - task_key: sync_supabase
+          depends_on: [{task_key: validate_gold}]
+          notebook_task:
+            notebook_path: ../src/notebooks/06_sync_supabase.py
+          max_retries: 2
+          min_retry_interval_millis: 60000
