@@ -118,7 +118,26 @@ Every data view shows the **source label, index standard and last-updated time**
 
 Primitives: shadcn/ui (Radix) restyled to our tokens: Dialog/Sheet, Popover, Select, Tabs/Segmented, Tooltip, Toggle, Skeleton, Sonner toasts. Patterns may be studied from the Aceternity, ReactBits and MagicUI registries (via MCP), then rewritten to our tokens with demo delays and loops removed. Charts: **Recharts**, themed with tokens (hairline grid, tabular ticks, a "show as table" toggle for accessibility). Map: `@vis.gl/react-google-maps`.
 
-## 10. Quality bar (checked before any UI ships)
+## 10. Brand mark and favicon
+
+The default Next.js favicon is removed. AERIS has its own mark: **an "A" built from two strokes, with a wind line as the crossbar and one small air-particle dot**, on a deep-navy rounded square with a hairline top-light edge. It reads at 16 px and matches the custom icon family.
+
+| Item | Spec |
+|---|---|
+| Source of truth | `apps/web/src/app/icon.svg` (already created; Next serves it as the tab icon automatically) |
+| Colors | tile gradient `#1e3a8a → #0b1020`; "A" gradient white → `#93c5fd`; wind line + dot `#7dd3fc` (sky blue, never amber: amber is reserved for forecast/estimated/stale) |
+| Shape | 64 × 64 grid, 16 px corner radius, 5.5 px stroke on the "A", 4.5 px on the wind line, round caps and joins |
+| Rule | Never the framework default, never a stock icon. Keep it legible at 16 × 16 and 32 × 32 |
+
+**Codex: create the rest of the set from `icon.svg` (same shapes, same colors):**
+- `apps/web/src/app/apple-icon.png` (180 × 180, the tile with 24 px safe margin)
+- `apps/web/src/app/favicon.ico` (16 + 32 px, only as a legacy fallback)
+- `apps/web/src/app/manifest.ts` (name "AERIS", `theme_color` `#1e3a8a`, `background_color` `#0b1020`)
+- `apps/web/src/app/opengraph-image.png` (1200 × 630: the mark, the word AERIS, the line "Delhi NCR air quality", on the sky backdrop)
+- Optional: a dark-tab variant of the SVG using `@media (prefers-color-scheme: dark)` inside the file
+- Use the same mark small in the top-left of the shell; do not invent a second logo
+
+## 11. Quality bar (checked before any UI ships)
 
 - [ ] Contrast ≥ 4.5:1 on the brightest backdrop crop, in light and dark
 - [ ] Glass only on chrome; reading surfaces ≥ 80% opaque

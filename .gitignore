@@ -37,3 +37,6 @@ Thumbs.db
 
 # collector build output
 apps/collector/dist/
+
+# local scratch
+.sp-entitlement.json

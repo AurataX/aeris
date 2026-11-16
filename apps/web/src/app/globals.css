@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Every color, radius and shadow lives here. Components only use these tokens. */
+:root,
+:root[data-theme="light"] {
+  --bg: #f8fafc;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-solid: #ffffff;
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-edge: rgba(255, 255, 255, 0.7);
+  --ink: #0f172a;
+  --ink-2: #475569;
+  --ink-3: #64748b;
+  --hairline: rgba(15, 23, 42, 0.08);
+  --primary: #1e40af;
+  --primary-2: #3b82f6;
+  --highlight: #f59e0b;
+  --sky-top: #bcd7f2;
+  --sky-bottom: #eaf2fb;
+  --haze: 0;
+  --aqi-good: #3ba55c;
+  --aqi-satisfactory: #a3c853;
+  --aqi-moderate: #f2c94c;
+  --aqi-poor: #f2994a;
+  --aqi-very-poor: #eb5757;
+  --aqi-severe: #9b2c2c;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b1020;
+  --surface: rgba(17, 24, 39, 0.82);
+  --surface-solid: #111827;
+  --glass: rgba(30, 41, 59, 0.55);
+  --glass-edge: rgba(255, 255, 255, 0.12);
+  --ink: #f1f5f9;
+  --ink-2: #cbd5e1;
+  --ink-3: #94a3b8;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --primary: #60a5fa;
+  --primary-2: #93c5fd;
+  --sky-top: #0f1b33;
+  --sky-bottom: #1b2a4a;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-hairline: var(--hairline);
+  --color-primary: var(--primary);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-fira-code);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* material 1: reading surface (data). Mostly opaque so text stays readable. */
+.surface {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--hairline);
+  border-radius: 24px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* material 2: navigation glass (dock, top utilities) */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass, .surface { backdrop-filter: none; background: var(--surface-solid); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 8px; }
