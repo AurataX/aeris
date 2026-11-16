@@ -4,15 +4,6 @@ bundle:
 include:
   - resources/*.yml
 
-# teammates can view and run the job/pipeline; code changes go through git
-permissions:
-  - user_name: admin@growthcharters.com
-    level: CAN_MANAGE
-  - user_name: bhumikakukreja06@gmail.com
-    level: CAN_RUN
-  - user_name: yashraj9.contact@gmail.com
-    level: CAN_RUN
-
 variables:
   warehouse_id:
     description: SQL warehouse for dashboards
