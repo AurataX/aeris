@@ -1,0 +1,13 @@
+resources:
+  jobs:
+    aeris_backfill:
+      name: aeris_backfill
+      description: Fills days that the S3 archive and the live collector both miss, using the OpenAQ hours API. Run it, then run aeris_pipeline.
+      tags:
+        project: aeris
+      performance_target: STANDARD
+      tasks:
+        - task_key: backfill
+          notebook_task:
+            notebook_path: ../src/notebooks/02_backfill_openaq.py
+          timeout_seconds: 3600
