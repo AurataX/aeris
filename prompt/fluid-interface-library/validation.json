@@ -1,0 +1,23 @@
+{
+  "browser": "Microsoft Edge (installed Chromium)",
+  "checks": [
+    "initial 1200 count",
+    "12 cards per page",
+    "combined domain/pattern/mode filters",
+    "domain-specific prompt text",
+    "dialog opens",
+    "Escape dismisses",
+    "focus returns to opener",
+    "no-result state",
+    "pagination",
+    "390px layout without horizontal overflow",
+    "mobile dialog",
+    "reduced-motion setting exercised",
+    "no page errors"
+  ],
+  "limitations": [
+    "Copy/download actions not automatically verified",
+    "No screen-reader or full contrast audit",
+    "Product animation performance is outside this reading-tool test"
+  ]
+}

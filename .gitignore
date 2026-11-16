@@ -1,0 +1,36 @@
+# secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# python
+__pycache__/
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# node / web
+node_modules/
+.next/
+out/
+.vercel/
+.wrangler/
+
+# databricks bundle state
+.databricks/
+
+# power bi local caches (the .pbip project itself IS committed)
+powerbi/**/.pbi/localSettings.json
+powerbi/**/.pbi/cache.abf
+
+# 93 MB notebook with outputs; the stripped copy prompt/First_PR.clean.ipynb is committed
+prompt/First_PR.ipynb
+
+# local data pulls
+data/
+*.csv.gz
+
+.DS_Store
+Thumbs.db

@@ -1,0 +1,153 @@
+{
+  "prompt_count": 1200,
+  "supplementary_toolkit_prompts": 20,
+  "domain_count": 20,
+  "research_date": "2026-10-01",
+  "files": [
+    {
+      "path": "by-domain/analytics-operations.md",
+      "bytes": 126072,
+      "sha256": "11f4f6630fa033ec33a3b587eab506425e071954c265a8134fa2a01ec7353674"
+    },
+    {
+      "path": "by-domain/architecture-workspace.md",
+      "bytes": 122898,
+      "sha256": "e98f42f5bd339f52e07e947adfd38402df69d9cea42351edd5c84651d38c62c3"
+    },
+    {
+      "path": "by-domain/audio-production.md",
+      "bytes": 122116,
+      "sha256": "e3d4a756540690a94011a1336fcd79820a0eb60ed01c36ef30a602c77a5cc0bf"
+    },
+    {
+      "path": "by-domain/commerce-operations.md",
+      "bytes": 123331,
+      "sha256": "743212c9b4086d2343466ebec71ff2dc2d1383eab14ed801c40f79c6b7f750d0"
+    },
+    {
+      "path": "by-domain/creative-studio.md",
+      "bytes": 121819,
+      "sha256": "254c42b5a11ea0c75e3a78d8b2457f4500a28a41bd79d18230c56b7ef7c6625b"
+    },
+    {
+      "path": "by-domain/data-analysis.md",
+      "bytes": 123953,
+      "sha256": "01c2d261330a35b42414ccbe27b28b4273e3f54d27a3a7af2b355f1ea0208ba0"
+    },
+    {
+      "path": "by-domain/developer-workspace.md",
+      "bytes": 123135,
+      "sha256": "e3ce6fa3920f0c4aef549dbc7c3387e4673b5f55ed1fce9f9502460d54a59592"
+    },
+    {
+      "path": "by-domain/electronics-design.md",
+      "bytes": 121162,
+      "sha256": "7e8611d64a6fa40139385fcd18c25d32c99dae1d22dc8bac59310cea5cd53e86"
+    },
+    {
+      "path": "by-domain/learning-workspace.md",
+      "bytes": 124326,
+      "sha256": "86d82f2c1ef5a0fb32189d43131eeaaa675bef868fec49b8ea5bff0042d04a66"
+    },
+    {
+      "path": "by-domain/mechanical-engineering.md",
+      "bytes": 124474,
+      "sha256": "ee663f65378e736ca30236fcaa4b362af8dd873e70a6c8bdeaf55341f29b75dd"
+    },
+    {
+      "path": "by-domain/personal-knowledge.md",
+      "bytes": 124090,
+      "sha256": "9ddd7a6dc4ee65030bd5f8dff6305cb518352653313afa7a9ae585c5cc10a6ff"
+    },
+    {
+      "path": "by-domain/photography-library.md",
+      "bytes": 124235,
+      "sha256": "a77cf6e3362ec06e3a8e20637259dcc1656493473608389afe74bbec80efb03a"
+    },
+    {
+      "path": "by-domain/project-planning.md",
+      "bytes": 122452,
+      "sha256": "210455c4a349192ffb1a8127af7d332eb4077b32f1cc752839a27294be59de2f"
+    },
+    {
+      "path": "by-domain/research-notebook.md",
+      "bytes": 122041,
+      "sha256": "281143fda1a4e9d248b24d02304d3fafaf305540e939ca1b6acd3d082c084ac0"
+    },
+    {
+      "path": "by-domain/robotics-console.md",
+      "bytes": 124252,
+      "sha256": "413d18eaed778318fb7283e7c2848ea43c84ea9d0e5be86b2cf692f82ed84811"
+    },
+    {
+      "path": "by-domain/scientific-visualization.md",
+      "bytes": 124460,
+      "sha256": "30973e3af1d39d44006161493361fe8b480ce2823f4428058aa1affa68a62da8"
+    },
+    {
+      "path": "by-domain/spatial-planning.md",
+      "bytes": 121700,
+      "sha256": "ceee73a26bb35752837ae268a7b7040f838ca68eb79253240bc15855e09e4341"
+    },
+    {
+      "path": "by-domain/travel-planning.md",
+      "bytes": 123203,
+      "sha256": "7d88870c6208ecbd8f3fbdb10b2b5bd8a6fb73d61c819061455be5b7b9666251"
+    },
+    {
+      "path": "by-domain/video-collaboration.md",
+      "bytes": 123675,
+      "sha256": "8bf01b646661224b084b6bf8dd673dae824dbaa2426f4b1cb17f8f026e1967c6"
+    },
+    {
+      "path": "by-domain/writing-workspace.md",
+      "bytes": 122833,
+      "sha256": "41b9cc93516c902aec7abd3c627e25d8cea61130b1e52eb8913a2ae26ec774f2"
+    },
+    {
+      "path": "index.html",
+      "bytes": 2614004,
+      "sha256": "743d88d156ee2bec2e8748cf2e27f5c2c8cafac11b05caee3d3bc02aab4b1c0d"
+    },
+    {
+      "path": "master-brief.md",
+      "bytes": 14148,
+      "sha256": "c0b5d31b8c2871475fcc058cb159981ff9a0170fa07dcc463b10982ddc949646"
+    },
+    {
+      "path": "prompts.json",
+      "bytes": 2650271,
+      "sha256": "8d48b875a4a92bfa737a17304b8e4b6e7bfa863661a06e5c96f4405271e9051d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2438,
+      "sha256": "b445a96dc02d72da59d0f7075c9de5bb19397b91be36febad766094c38f7ffdd"
+    },
+    {
+      "path": "reference.png",
+      "bytes": 487090,
+      "sha256": "ad3773a42586c46057a26b127be7de1ad1683eaeae44088e5f2005da47cccbab"
+    },
+    {
+      "path": "research.md",
+      "bytes": 17343,
+      "sha256": "ec136af79a756ce23ee12b3099dc84ab1017ed2adbf5294d351dc55f063b3ad9"
+    },
+    {
+      "path": "toolkit-prompts.md",
+      "bytes": 11012,
+      "sha256": "8f61ddf025f423dc27d5007cb2fe6fac79ef7fd3d5230c4510d6c378aa0cb9d5"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 646,
+      "sha256": "dee0359cfb1e9720f4ba86c5443ba43d79fa538ebf3c6cd98ccbb49bf7f4c079"
+    },
+    {
+      "path": "visual-direction.md",
+      "bytes": 3956,
+      "sha256": "97c9ae64be922c695a454a6257cd0ea71016100d7ee2ca0357f6b88423fbacba"
+    }
+  ]
+}
