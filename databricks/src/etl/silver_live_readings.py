@@ -13,9 +13,9 @@ def live_readings():
                        col("x.parameter.units").alias("original_unit")))
 
     latest = (spark.read.table(table("bronze", "openaq_latest_raw"))
-              .select(explode("payload").alias("loc"))
-              .select(col("loc.locationsId").alias("location_id"), explode("loc.results").alias("r"))
-              .select(concat(lit("openaq:"), col("location_id")).alias("station_id"),
+              .select(explode("payload").alias("resp"))                 # one API response per station
+              .select(explode("resp.results").alias("r"))
+              .select(concat(lit("openaq:"), col("r.locationsId")).alias("station_id"),
                       col("r.sensorsId").alias("sensor_id"),
                       col("r.value").alias("original_value"),
                       to_timestamp(col("r.datetime.utc")).alias("ts")))

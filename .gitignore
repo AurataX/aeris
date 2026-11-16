@@ -34,3 +34,6 @@ data/
 
 .DS_Store
 Thumbs.db
+
+# collector build output
+apps/collector/dist/
