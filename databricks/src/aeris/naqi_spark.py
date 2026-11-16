@@ -22,7 +22,7 @@ def add_sub_index(df, spark, value_col="daily_value"):
     in_band = (df.pollutant == bp.pollutant) & (v > bp.prev_hi) & ((v <= bp.bp_hi) | bp.is_last)
     return (df.join(broadcast(bp), in_band, "inner").drop(bp.pollutant)
               .withColumn("sub_index", least(round_((col("i_hi") - col("i_lo")) / (col("bp_hi") - col("bp_lo"))
-                                                    * (v - col("bp_lo")) + col("i_lo")), lit(500)))
+                                                    * (v - col("bp_lo")) + col("i_lo")), lit(500)).cast("int"))
               .drop("prev_hi", "bp_lo", "bp_hi", "i_lo", "i_hi", "is_last"))
 
 

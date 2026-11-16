@@ -1,0 +1,1510 @@
+{
+  "datasets": [
+    {
+      "name": "ds_daily",
+      "displayName": "City daily NAQI",
+      "queryLines": [
+        "SELECT city, date_ist, naqi, naqi_category, dominant_pollutant,\n",
+        "       pm25_avg, pm10_avg, no2_avg, o3_max8h, stations_count,\n",
+        "       CASE WHEN naqi > 300 THEN 1 ELSE 0 END AS very_poor_day\n",
+        "FROM city_daily_aqi WHERE naqi IS NOT NULL\n"
+      ]
+    },
+    {
+      "name": "ds_trends",
+      "displayName": "Pollutant trends",
+      "queryLines": [
+        "SELECT t.city, t.date_ist, p.display_name AS pollutant, t.avg_value, t.max_value, p.naaqs_limit,\n",
+        "       CASE WHEN t.exceeds_naaqs THEN 1 ELSE 0 END AS over_limit\n",
+        "FROM pollutant_trends t JOIN dim_pollutant p ON t.pollutant = p.pollutant\n",
+        "WHERE t.pollutant <> 'co'\n"
+      ]
+    },
+    {
+      "name": "ds_weather",
+      "displayName": "Weather vs pollution",
+      "queryLines": [
+        "SELECT city, date_ist, pm25_avg, temp_avg_c, humidity_avg_pct, wind_avg_kmh, precip_sum_mm\n",
+        "FROM weather_pollution_daily WHERE pm25_avg IS NOT NULL\n"
+      ]
+    },
+    {
+      "name": "ds_stations",
+      "displayName": "Monitoring stations",
+      "queryLines": [
+        "SELECT name, city, lat, lon, naqi_24h, naqi_category, round(pm25_latest, 1) AS pm25_latest,\n",
+        "       last_observed_at, CASE WHEN is_stale THEN 'stale' ELSE 'reporting' END AS status\n",
+        "FROM station_status\n"
+      ]
+    },
+    {
+      "name": "ds_ops",
+      "displayName": "Pipeline row counts",
+      "queryLines": [
+        "SELECT layer, table_name, row_count, computed_at\n",
+        "FROM aeris_brick.ops.table_stats\n",
+        "WHERE run_id = (SELECT max_by(run_id, computed_at) FROM aeris_brick.ops.table_stats)\n"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "overview",
+      "displayName": "Overview",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# AERIS · Delhi NCR Air Quality\n",
+                "\n",
+                "Indian NAQI computed with the **CPCB method** from 62 OpenAQ ground monitors (Jan 2025 → Nov 2026). Air is cleanest in the monsoon (Aug ≈ 95) and worst in Nov–Dec (≈ 350), every year. Daily values need ≥ 16 hours of data. Source: OpenAQ archive on AWS S3 + live collector · processed with Spark on Azure Databricks (Bronze → Silver → Gold)."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-avg-naqi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "avg(naqi)",
+                      "expression": "AVG(`naqi`)"
+                    },
+                    {
+                      "name": "weekly(date_ist)",
+                      "expression": "DATE_TRUNC(\"WEEK\", `date_ist`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(naqi)",
+                  "displayName": "Average NAQI",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "weekly(date_ist)"
+                }
+              },
+              "frame": {
+                "title": "Average NAQI",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-peak-naqi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "max(naqi)",
+                      "expression": "MAX(`naqi`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "max(naqi)",
+                  "displayName": "Peak daily NAQI",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "title": "Peak daily NAQI",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-very-poor",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "sum(very_poor_day)",
+                      "expression": "SUM(`very_poor_day`)"
+                    },
+                    {
+                      "name": "monthly(date_ist)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `date_ist`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(very_poor_day)",
+                  "displayName": "Very Poor / Severe city-days",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "monthly(date_ist)"
+                }
+              },
+              "frame": {
+                "title": "Very Poor / Severe city-days",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-pm25",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "avg(pm25_avg)",
+                      "expression": "AVG(`pm25_avg`)"
+                    },
+                    {
+                      "name": "weekly(date_ist)",
+                      "expression": "DATE_TRUNC(\"WEEK\", `date_ist`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(pm25_avg)",
+                  "displayName": "Average PM2.5",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  },
+                  "formatTemplate": "{{ @formatted }} µg/m³"
+                },
+                "period": {
+                  "fieldName": "weekly(date_ist)"
+                }
+              },
+              "frame": {
+                "title": "Average PM2.5",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "naqi-trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "date_ist",
+                      "expression": "`date_ist`"
+                    },
+                    {
+                      "name": "avg(naqi)",
+                      "expression": "AVG(`naqi`)"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "date_ist",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Date"
+                },
+                "y": {
+                  "fieldName": "avg(naqi)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "NAQI"
+                },
+                "color": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                }
+              },
+              "frame": {
+                "title": "Daily NAQI by city",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "monthly-city",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "monthly(date_ist)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `date_ist`)"
+                    },
+                    {
+                      "name": "avg(naqi)",
+                      "expression": "AVG(`naqi`)"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(date_ist)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Month"
+                },
+                "y": {
+                  "fieldName": "avg(naqi)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Avg NAQI"
+                },
+                "color": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                }
+              },
+              "frame": {
+                "title": "Monthly average NAQI",
+                "showTitle": true
+              },
+              "mark": {
+                "layout": "group"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "category-days",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    },
+                    {
+                      "name": "count(date_ist)",
+                      "expression": "COUNT(`date_ist`)"
+                    },
+                    {
+                      "name": "naqi_category",
+                      "expression": "`naqi_category`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                },
+                "y": {
+                  "fieldName": "count(date_ist)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Days"
+                },
+                "color": {
+                  "fieldName": "naqi_category",
+                  "displayName": "Category",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Good",
+                        "Satisfactory",
+                        "Moderate",
+                        "Poor",
+                        "Very Poor",
+                        "Severe"
+                      ]
+                    },
+                    "mappings": [
+                      {
+                        "value": "Good",
+                        "color": "#3BA55C"
+                      },
+                      {
+                        "value": "Satisfactory",
+                        "color": "#A3C853"
+                      },
+                      {
+                        "value": "Moderate",
+                        "color": "#F2C94C"
+                      },
+                      {
+                        "value": "Poor",
+                        "color": "#F2994A"
+                      },
+                      {
+                        "value": "Very Poor",
+                        "color": "#EB5757"
+                      },
+                      {
+                        "value": "Severe",
+                        "color": "#9B2C2C"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "title": "Days per AQI category",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "pollutants",
+      "displayName": "Pollutants & weather",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "p-title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Pollutants and weather\n",
+                "\n",
+                "Concentrations in µg/m³. Weather is Open-Meteo reanalysis (modeled, not station-measured)."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "f-pollutant",
+            "queries": [
+              {
+                "name": "f-pollutant_ds_trends",
+                "query": {
+                  "datasetName": "ds_trends",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "pollutant",
+                      "expression": "`pollutant`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "pollutant",
+                    "displayName": "Pollutant",
+                    "queryName": "f-pollutant_ds_trends"
+                  }
+                ]
+              },
+              "frame": {
+                "title": "Pollutant",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "pollutant-trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_trends",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "date_ist",
+                      "expression": "`date_ist`"
+                    },
+                    {
+                      "name": "avg(avg_value)",
+                      "expression": "AVG(`avg_value`)"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "date_ist",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Date"
+                },
+                "y": {
+                  "fieldName": "avg(avg_value)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "µg/m³"
+                },
+                "color": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                }
+              },
+              "frame": {
+                "title": "Daily average concentration by city",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "over-limit",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_trends",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "pollutant",
+                      "expression": "`pollutant`"
+                    },
+                    {
+                      "name": "sum(over_limit)",
+                      "expression": "SUM(`over_limit`)"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "pollutant",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Pollutant"
+                },
+                "y": {
+                  "fieldName": "sum(over_limit)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "City-days over limit"
+                },
+                "color": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                }
+              },
+              "frame": {
+                "title": "Days above the NAAQS limit",
+                "showTitle": true
+              },
+              "mark": {
+                "layout": "group"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "pm-vs-wind",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_weather",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "wind_avg_kmh",
+                      "expression": "`wind_avg_kmh`"
+                    },
+                    {
+                      "name": "pm25_avg",
+                      "expression": "`pm25_avg`"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "scatter",
+              "encodings": {
+                "x": {
+                  "fieldName": "wind_avg_kmh",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Wind km/h"
+                },
+                "y": {
+                  "fieldName": "pm25_avg",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "PM2.5 µg/m³"
+                },
+                "color": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                }
+              },
+              "frame": {
+                "title": "PM2.5 vs wind speed (daily)",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 10,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "pm-vs-temp",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_weather",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "temp_avg_c",
+                      "expression": "`temp_avg_c`"
+                    },
+                    {
+                      "name": "pm25_avg",
+                      "expression": "`pm25_avg`"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "scatter",
+              "encodings": {
+                "x": {
+                  "fieldName": "temp_avg_c",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Temperature °C"
+                },
+                "y": {
+                  "fieldName": "pm25_avg",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "PM2.5 µg/m³"
+                },
+                "color": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Delhi",
+                        "Gurugram",
+                        "Noida",
+                        "Ghaziabad",
+                        "Faridabad"
+                      ]
+                    }
+                  },
+                  "displayName": "City"
+                }
+              },
+              "frame": {
+                "title": "PM2.5 vs temperature (daily)",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 10,
+            "width": 4,
+            "height": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "stations",
+      "displayName": "Stations",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "s-title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Monitoring stations\n",
+                "\n",
+                "Latest 24 h NAQI per station. Stale = no reading in the last 3 hours."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "station-map",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_stations",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "lat",
+                      "expression": "`lat`"
+                    },
+                    {
+                      "name": "lon",
+                      "expression": "`lon`"
+                    },
+                    {
+                      "name": "naqi_24h",
+                      "expression": "`naqi_24h`"
+                    },
+                    {
+                      "name": "name",
+                      "expression": "`name`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "lat"
+                  },
+                  "longitude": {
+                    "fieldName": "lon"
+                  }
+                },
+                "color": {
+                  "fieldName": "naqi_24h",
+                  "displayName": "NAQI",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "custom-sequential",
+                      "colors": {
+                        "start": "#A3C853",
+                        "end": "#9B2C2C"
+                      }
+                    }
+                  }
+                },
+                "extra": [
+                  {
+                    "fieldName": "name",
+                    "displayName": "Station"
+                  }
+                ]
+              },
+              "frame": {
+                "title": "Stations by latest NAQI",
+                "showTitle": true
+              },
+              "mark": {
+                "opacity": 0.85
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 7,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "station-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_stations",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "name",
+                      "expression": "`name`"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    },
+                    {
+                      "name": "naqi_24h",
+                      "expression": "`naqi_24h`"
+                    },
+                    {
+                      "name": "naqi_category",
+                      "expression": "`naqi_category`"
+                    },
+                    {
+                      "name": "pm25_latest",
+                      "expression": "`pm25_latest`"
+                    },
+                    {
+                      "name": "status",
+                      "expression": "`status`"
+                    },
+                    {
+                      "name": "last_observed_at",
+                      "expression": "`last_observed_at`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "name",
+                    "displayName": "Station"
+                  },
+                  {
+                    "fieldName": "city",
+                    "displayName": "City"
+                  },
+                  {
+                    "fieldName": "naqi_24h",
+                    "displayName": "NAQI"
+                  },
+                  {
+                    "fieldName": "naqi_category",
+                    "displayName": "Category"
+                  },
+                  {
+                    "fieldName": "pm25_latest",
+                    "displayName": "PM2.5 now"
+                  },
+                  {
+                    "fieldName": "status",
+                    "displayName": "Status"
+                  },
+                  {
+                    "fieldName": "last_observed_at",
+                    "displayName": "Last reading (UTC)"
+                  }
+                ]
+              },
+              "frame": {
+                "title": "Station detail",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 2,
+            "width": 5,
+            "height": 9
+          }
+        }
+      ]
+    },
+    {
+      "name": "pipeline",
+      "displayName": "Pipeline health",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "o-title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Pipeline health\n",
+                "\n",
+                "Row counts per table from the last validated run of the Lakeflow job (Bronze = raw, Silver = clean hourly, Gold = analytics)."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "rows-by-layer",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_ops",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "table_name",
+                      "expression": "`table_name`"
+                    },
+                    {
+                      "name": "sum(row_count)",
+                      "expression": "SUM(`row_count`)"
+                    },
+                    {
+                      "name": "layer",
+                      "expression": "`layer`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(row_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Rows"
+                },
+                "y": {
+                  "fieldName": "table_name",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Table"
+                },
+                "color": {
+                  "fieldName": "layer",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "bronze",
+                        "color": "#B7791F"
+                      },
+                      {
+                        "value": "silver",
+                        "color": "#94A3B8"
+                      },
+                      {
+                        "value": "gold",
+                        "color": "#D4A72C"
+                      }
+                    ]
+                  },
+                  "displayName": "Layer"
+                }
+              },
+              "frame": {
+                "title": "Rows per table (log scale)",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 7,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "ops-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_ops",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "layer",
+                      "expression": "`layer`"
+                    },
+                    {
+                      "name": "table_name",
+                      "expression": "`table_name`"
+                    },
+                    {
+                      "name": "row_count",
+                      "expression": "`row_count`"
+                    },
+                    {
+                      "name": "computed_at",
+                      "expression": "`computed_at`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "layer",
+                    "displayName": "Layer"
+                  },
+                  {
+                    "fieldName": "table_name",
+                    "displayName": "Table"
+                  },
+                  {
+                    "fieldName": "row_count",
+                    "displayName": "Rows"
+                  },
+                  {
+                    "fieldName": "computed_at",
+                    "displayName": "Computed at"
+                  }
+                ]
+              },
+              "frame": {
+                "title": "Last run",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 2,
+            "width": 5,
+            "height": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "filters",
+      "displayName": "Filters",
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "f-city",
+            "queries": [
+              {
+                "name": "f-city_ds_daily",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "f-city_ds_trends",
+                "query": {
+                  "datasetName": "ds_trends",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "f-city_ds_weather",
+                "query": {
+                  "datasetName": "ds_weather",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "f-city_ds_stations",
+                "query": {
+                  "datasetName": "ds_stations",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "city",
+                    "displayName": "City",
+                    "queryName": "f-city_ds_daily"
+                  },
+                  {
+                    "fieldName": "city",
+                    "displayName": "City",
+                    "queryName": "f-city_ds_trends"
+                  },
+                  {
+                    "fieldName": "city",
+                    "displayName": "City",
+                    "queryName": "f-city_ds_weather"
+                  },
+                  {
+                    "fieldName": "city",
+                    "displayName": "City",
+                    "queryName": "f-city_ds_stations"
+                  }
+                ]
+              },
+              "frame": {
+                "title": "City",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "f-date",
+            "queries": [
+              {
+                "name": "f-date_ds_daily",
+                "query": {
+                  "datasetName": "ds_daily",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "date_ist",
+                      "expression": "`date_ist`"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "f-date_ds_trends",
+                "query": {
+                  "datasetName": "ds_trends",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "date_ist",
+                      "expression": "`date_ist`"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "f-date_ds_weather",
+                "query": {
+                  "datasetName": "ds_weather",
+                  "disaggregated": false,
+                  "fields": [
+                    {
+                      "name": "date_ist",
+                      "expression": "`date_ist`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "date_ist",
+                    "displayName": "Date",
+                    "queryName": "f-date_ds_daily"
+                  },
+                  {
+                    "fieldName": "date_ist",
+                    "displayName": "Date",
+                    "queryName": "f-date_ds_trends"
+                  },
+                  {
+                    "fieldName": "date_ist",
+                    "displayName": "Date",
+                    "queryName": "f-date_ds_weather"
+                  }
+                ]
+              },
+              "frame": {
+                "title": "Date",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        }
+      ]
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#F8FAFC",
+        "dark": "#0B1020"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#111827"
+      },
+      "widgetBorderColor": {
+        "light": "#FFFFFF",
+        "dark": "#111827"
+      },
+      "fontColor": {
+        "light": "#0F172A",
+        "dark": "#F1F5F9"
+      },
+      "selectionColor": {
+        "light": "#1E40AF",
+        "dark": "#60A5FA"
+      },
+      "visualizationColors": [
+        "#1E40AF",
+        "#0EA5E9",
+        "#7C3AED",
+        "#14B8A6",
+        "#F59E0B",
+        "#DB2777",
+        "#64748B"
+      ],
+      "widgetHeaderAlignment": "LEFT",
+      "widgetCornerRadius": 12
+    }
+  }
+}

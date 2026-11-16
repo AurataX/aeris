@@ -1,0 +1,8 @@
+resources:
+  dashboards:
+    aeris_dashboard:
+      display_name: AERIS · Delhi NCR Air Quality
+      file_path: ../dashboards/aeris.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      dataset_catalog: aeris_brick
+      dataset_schema: gold

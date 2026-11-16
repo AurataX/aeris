@@ -4,6 +4,15 @@ bundle:
 include:
   - resources/*.yml
 
+# team: full edit access on every job, pipeline and dashboard in this bundle
+permissions:
+  - user_name: admin@growthcharters.com
+    level: CAN_MANAGE
+  - user_name: bhumikakukreja06@gmail.com
+    level: CAN_MANAGE
+  - user_name: yashraj9.contact@gmail.com
+    level: CAN_MANAGE
+
 variables:
   warehouse_id:
     description: SQL warehouse for dashboards
