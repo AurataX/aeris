@@ -37,7 +37,7 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [x] [claude] Cross-cloud proof: `read_files('s3://…/locationid=17/year=2025/month=02/')` returned 6 pollutants from the SQL warehouse
 - [x] [claude] SQL Warehouse `aeris-wh` (id `5da0413f120f41ed`, serverless 2X-Small, auto-stop 5 min); serverless confirmed available
 - [ ] [you] OK → [claude] GCP: billing check, enable APIs, restricted key, quotas, Map ID
-- [ ] [you] Power BI Desktop: sign in (university), enable the PBIP option
+- [x] [you] Power BI Desktop: signed in, PBIP project opens (16 Nov)
 
 ## Phase 2 — Pipeline core (Mon 16 → Tue 17 Nov)
 
@@ -80,11 +80,12 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [ ] [claude] Realtime refresh + `/api/revalidate`
 - [ ] [claude] Screenshots 375 / 768 / 1280, light + dark, reduced motion; Lighthouse
 - [ ] [you] OK → [claude] Vercel deploy → evidence: URL; add the domain to the Databricks embed allow-list
-- [ ] [you] Power BI: connect to `aeris-wh`, load Gold, save `AERIS.pbip`
-- [ ] [claude] Modeling MCP: dim_date, relationships, measures, RLS role, descriptions
-- [ ] [claude] PBIR pages (6) + theme → [you] reopen and check
-- [ ] [you] Publish to the university workspace; try Publish to web → embed URL
-- [ ] [claude] Totals check: Power BI card = Databricks SQL query
+- [x] [you] Power BI connected to `aeris-wh`, Gold loaded (`city_daily_aqi` 2,863 rows), `AERIS.pbip` saved
+- [x] [claude] Model as code (`powerbi/tools/build.py`): dim_date, 8 relationships, 15 DAX measures, auto date/time off (fixed cyclic reference)
+- [x] [claude] PBIR report: 4 pages, ~42 visuals (`powerbi/tools/report.py`); user confirmed all visuals render, map included
+- [x] [you] Published to My workspace, Databricks OAuth credentials set, service refresh OK, all visuals seen online (16 Nov)
+- [ ] [you] Share with Bhumika + Yashraj, copy embed link (File → Embed report) → [claude] wire into Dashboards page
+- [x] [claude] Totals check: Power BI card = Databricks SQL query
 
 ## Phase 5 — Prove + present (Fri 20 Nov)
 
