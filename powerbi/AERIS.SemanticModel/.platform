@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "AERIS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a1d490fd-a235-4c38-ac0a-40c3675629ce"
+  }
+}
