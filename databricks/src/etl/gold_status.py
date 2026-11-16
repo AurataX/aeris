@@ -1,5 +1,5 @@
 from pyspark import pipelines as dp
-from pyspark.sql.functions import col, max as max_, sum as sum_, first, lit, expr, row_number
+from pyspark.sql.functions import col, max as max_, sum as sum_, lit, expr, row_number, when
 from pyspark.sql.window import Window
 from aeris.config import table
 
@@ -12,10 +12,8 @@ def newest(df, by, order_col):
 @dp.materialized_view(name=table("gold", "station_status"), comment="Latest reading and NAQI per monitoring station")
 def station_status():
     obs = spark.read.table(table("silver", "pollutant_observations"))
-    latest = (newest(obs, ["station_id", "pollutant"], "observed_at")
-              .groupBy("station_id").pivot("pollutant", ["pm25", "pm10", "no2", "o3"]).agg(first("value"))
-              .withColumnRenamed("pm25", "pm25_latest").withColumnRenamed("pm10", "pm10_latest")
-              .withColumnRenamed("no2", "no2_latest").withColumnRenamed("o3", "o3_latest"))
+    latest = (newest(obs, ["station_id", "pollutant"], "observed_at").groupBy("station_id")
+              .agg(*[max_(when(col("pollutant") == p, col("value"))).alias(f"{p}_latest") for p in ["pm25", "pm10", "no2", "o3"]]))
     last_seen = obs.groupBy("station_id").agg(max_("observed_at").alias("last_observed_at"))
     aqi = newest(spark.read.table(table("gold", "station_daily_aqi")).filter("naqi IS NOT NULL"), ["station_id"], "date_ist")
     return (spark.read.table(table("silver", "stations")).filter("is_monitor")

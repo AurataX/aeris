@@ -48,8 +48,12 @@ for t in ["bronze.openaq_archive_raw", "silver.pollutant_observations", "gold.ci
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- why did rows get quarantined?
-# MAGIC SELECT reason, count(*) AS rows FROM aeris_brick.silver.quarantine_records GROUP BY reason
+# MAGIC -- data quality: rows dropped by each pipeline expectation (from the pipeline event log)
+# MAGIC SELECT row_expectations.dataset, row_expectations.name, sum(row_expectations.failed_records) AS dropped
+# MAGIC FROM (SELECT explode(from_json(details:flow_progress:data_quality:expectations,
+# MAGIC       'array<struct<name string, dataset string, passed_records int, failed_records int>>')) AS row_expectations
+# MAGIC       FROM event_log(TABLE(aeris_brick.silver.pollutant_observations)) WHERE event_type = 'flow_progress')
+# MAGIC GROUP BY ALL
 
 # COMMAND ----------
 

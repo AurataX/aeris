@@ -37,10 +37,12 @@ def station_daily_aqi():
 def city_daily_aqi():
     city_day = (spark.read.table("station_day").groupBy("city", "date_ist", "pollutant")
                 .agg(avg("daily_value").alias("daily_value"), count("*").alias("stations")))
-    pivoted = (city_day.groupBy("city", "date_ist").pivot("pollutant", ["pm25", "pm10", "no2", "so2", "o3"])
-               .agg(avg("daily_value"))
-               .withColumnRenamed("pm25", "pm25_avg").withColumnRenamed("pm10", "pm10_avg")
-               .withColumnRenamed("no2", "no2_avg").withColumnRenamed("so2", "so2_avg").withColumnRenamed("o3", "o3_max8h"))
+    def value_of(p):
+        return avg(when(col("pollutant") == p, col("daily_value")))
+
+    pivoted = city_day.groupBy("city", "date_ist").agg(
+        value_of("pm25").alias("pm25_avg"), value_of("pm10").alias("pm10_avg"),
+        value_of("no2").alias("no2_avg"), value_of("so2").alias("so2_avg"), value_of("o3").alias("o3_max8h"))
     counts = city_day.groupBy("city", "date_ist").agg(max_("stations").alias("stations_count"))
     return (naqi_per(city_day, ["city", "date_ist"]).join(pivoted, ["city", "date_ist"]).join(counts, ["city", "date_ist"])
             .withColumn("index_standard", lit("IN_NAQI_CPCB")).withColumn("source", lit("openaq")))
