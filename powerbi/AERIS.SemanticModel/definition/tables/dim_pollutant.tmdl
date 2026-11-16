@@ -34,10 +34,11 @@ table dim_pollutant
 	partition dim_pollutant = m
 		mode: import
 		source =
-			let
-				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
-				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
-				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
-				tbl = schema{[Name = "dim_pollutant", Kind = "Table"]}[Data]
-			in
-				tbl
+				let
+					Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+					db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+					schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+					tbl = schema{[Name = "dim_pollutant", Kind = "Table"]}[Data]
+				in
+					tbl
+

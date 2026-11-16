@@ -1,2 +1,3 @@
-database AERIS
-	compatibilityLevel: 1604
+database
+	compatibilityLevel: 1606
+

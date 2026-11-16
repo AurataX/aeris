@@ -1,6 +1,51 @@
 table city_daily_aqi
 	lineageTag: de91cd6f-1431-4233-80aa-c078ce2d6347
 
+	measure 'NAQI (avg)' = AVERAGE(city_daily_aqi[naqi])
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 6e5bafdf-cdd7-4a40-93c0-acf409149eca
+
+	measure 'NAQI (peak)' = MAX(city_daily_aqi[naqi])
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 5c4f31c4-30a6-4ed5-8bf4-55c6a3ea5cc9
+
+	measure 'Very Poor+ days' = CALCULATE(COUNTROWS(city_daily_aqi), city_daily_aqi[naqi] > 300)
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 0f8b4121-f8f9-40b9-a5a2-6078bba61f57
+
+	measure 'Days with data' = CALCULATE(COUNTROWS(city_daily_aqi), NOT ISBLANK(city_daily_aqi[naqi]))
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 4cff8d7d-f4a7-489a-a2d7-1fff6aa74b41
+
+	measure '% days Very Poor+' = DIVIDE([Very Poor+ days], [Days with data])
+		formatString: 0.0%
+		displayFolder: AQI
+		lineageTag: 8e023f20-e233-4c93-8ec7-d62a7b441d50
+
+	measure 'NAQI 7-day rolling' = AVERAGEX(DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY), [NAQI (avg)])
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 8859ca42-774e-415c-a304-6a142f2c2fbe
+
+	measure 'NAQI vs last month' = [NAQI (avg)] - CALCULATE([NAQI (avg)], DATEADD(dim_date[Date], -1, MONTH))
+		formatString: +0;-0;0
+		displayFolder: AQI
+		lineageTag: 3ba3d677-6ed1-48f3-a9a5-d29f326b3d03
+
+	measure 'PM2.5 avg' = AVERAGE(city_daily_aqi[pm25_avg])
+		formatString: 0.0
+		displayFolder: Pollutants
+		lineageTag: 2abe7fb4-b565-44dd-89fa-184a3fbf6577
+
+	measure 'PM10 avg' = AVERAGE(city_daily_aqi[pm10_avg])
+		formatString: 0.0
+		displayFolder: Pollutants
+		lineageTag: 966d4cce-79ae-46c3-9eb2-1f0f3a0ad43e
+
 	column city
 		dataType: string
 		lineageTag: b94eb769-a167-46af-bcaf-e369b393f7f2
@@ -9,10 +54,12 @@ table city_daily_aqi
 
 	column date_ist
 		dataType: dateTime
+		formatString: dd mmm yyyy
 		lineageTag: d31fd66a-d3a0-436d-bcb3-2b388007a209
 		summarizeBy: none
 		sourceColumn: date_ist
-		formatString: dd mmm yyyy
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column naqi
 		dataType: int64
@@ -86,58 +133,14 @@ table city_daily_aqi
 		summarizeBy: none
 		sourceColumn: source
 
-	measure 'NAQI (avg)' = AVERAGE(city_daily_aqi[naqi])
-		formatString: 0
-		displayFolder: AQI
-		lineageTag: 6e5bafdf-cdd7-4a40-93c0-acf409149eca
-
-	measure 'NAQI (peak)' = MAX(city_daily_aqi[naqi])
-		formatString: 0
-		displayFolder: AQI
-		lineageTag: 5c4f31c4-30a6-4ed5-8bf4-55c6a3ea5cc9
-
-	measure 'Very Poor+ days' = CALCULATE(COUNTROWS(city_daily_aqi), city_daily_aqi[naqi] > 300)
-		formatString: 0
-		displayFolder: AQI
-		lineageTag: 0f8b4121-f8f9-40b9-a5a2-6078bba61f57
-
-	measure 'Days with data' = CALCULATE(COUNTROWS(city_daily_aqi), NOT ISBLANK(city_daily_aqi[naqi]))
-		formatString: 0
-		displayFolder: AQI
-		lineageTag: 4cff8d7d-f4a7-489a-a2d7-1fff6aa74b41
-
-	measure '% days Very Poor+' = DIVIDE([Very Poor+ days], [Days with data])
-		formatString: 0.0%
-		displayFolder: AQI
-		lineageTag: 8e023f20-e233-4c93-8ec7-d62a7b441d50
-
-	measure 'NAQI 7-day rolling' = AVERAGEX(DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY), [NAQI (avg)])
-		formatString: 0
-		displayFolder: AQI
-		lineageTag: 8859ca42-774e-415c-a304-6a142f2c2fbe
-
-	measure 'NAQI vs last month' = [NAQI (avg)] - CALCULATE([NAQI (avg)], DATEADD(dim_date[Date], -1, MONTH))
-		formatString: +0;-0;0
-		displayFolder: AQI
-		lineageTag: 3ba3d677-6ed1-48f3-a9a5-d29f326b3d03
-
-	measure 'PM2.5 avg' = AVERAGE(city_daily_aqi[pm25_avg])
-		formatString: 0.0
-		displayFolder: Pollutants
-		lineageTag: 2abe7fb4-b565-44dd-89fa-184a3fbf6577
-
-	measure 'PM10 avg' = AVERAGE(city_daily_aqi[pm10_avg])
-		formatString: 0.0
-		displayFolder: Pollutants
-		lineageTag: 966d4cce-79ae-46c3-9eb2-1f0f3a0ad43e
-
 	partition city_daily_aqi = m
 		mode: import
 		source =
-			let
-				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
-				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
-				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
-				tbl = schema{[Name = "city_daily_aqi", Kind = "Table"]}[Data]
-			in
-				tbl
+				let
+					Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+					db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+					schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+					tbl = schema{[Name = "city_daily_aqi", Kind = "Table"]}[Data]
+				in
+					tbl
+

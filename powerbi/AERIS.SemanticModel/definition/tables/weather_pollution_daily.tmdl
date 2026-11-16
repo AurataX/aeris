@@ -1,6 +1,11 @@
 table weather_pollution_daily
 	lineageTag: 571296f3-6607-4039-a8ad-c6a4114b758d
 
+	measure 'Pearson r (PM2.5, wind)' = VAR t = FILTER(weather_pollution_daily, NOT ISBLANK(weather_pollution_daily[pm25_avg]) && NOT ISBLANK(weather_pollution_daily[wind_avg_kmh])) VAR mx = AVERAGEX(t, weather_pollution_daily[wind_avg_kmh]) VAR my = AVERAGEX(t, weather_pollution_daily[pm25_avg]) RETURN DIVIDE(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)*(weather_pollution_daily[pm25_avg]-my)), SQRT(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)^2) * SUMX(t, (weather_pollution_daily[pm25_avg]-my)^2)))
+		formatString: 0.00
+		displayFolder: Weather
+		lineageTag: f9e84f02-8fa7-4770-9e39-99ac5a730ab0
+
 	column city
 		dataType: string
 		lineageTag: 33919e88-3200-4d4c-b485-ea0889dd1312
@@ -9,10 +14,12 @@ table weather_pollution_daily
 
 	column date_ist
 		dataType: dateTime
+		formatString: dd mmm yyyy
 		lineageTag: 2be7346a-423e-487c-99f0-d3ca9c22f55f
 		summarizeBy: none
 		sourceColumn: date_ist
-		formatString: dd mmm yyyy
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column naqi
 		dataType: int64
@@ -68,18 +75,14 @@ table weather_pollution_daily
 		summarizeBy: none
 		sourceColumn: weather_is_modeled
 
-	measure 'Pearson r (PM2.5, wind)' = VAR t = FILTER(weather_pollution_daily, NOT ISBLANK(weather_pollution_daily[pm25_avg]) && NOT ISBLANK(weather_pollution_daily[wind_avg_kmh])) VAR mx = AVERAGEX(t, weather_pollution_daily[wind_avg_kmh]) VAR my = AVERAGEX(t, weather_pollution_daily[pm25_avg]) RETURN DIVIDE(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)*(weather_pollution_daily[pm25_avg]-my)), SQRT(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)^2) * SUMX(t, (weather_pollution_daily[pm25_avg]-my)^2)))
-		formatString: 0.00
-		displayFolder: Weather
-		lineageTag: f9e84f02-8fa7-4770-9e39-99ac5a730ab0
-
 	partition weather_pollution_daily = m
 		mode: import
 		source =
-			let
-				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
-				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
-				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
-				tbl = schema{[Name = "weather_pollution_daily", Kind = "Table"]}[Data]
-			in
-				tbl
+				let
+					Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+					db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+					schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+					tbl = schema{[Name = "weather_pollution_daily", Kind = "Table"]}[Data]
+				in
+					tbl
+

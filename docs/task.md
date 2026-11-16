@@ -85,7 +85,7 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [x] [claude] PBIR report: 4 pages, ~42 visuals (`powerbi/tools/report.py`); user confirmed all visuals render, map included
 - [x] [you] Published to My workspace, Databricks OAuth credentials set, service refresh OK, all visuals seen online (16 Nov)
 - [ ] [you] Share with Bhumika + Yashraj, copy embed link (File → Embed report) → [claude] wire into Dashboards page
-- [x] [claude] Totals check: Power BI card = Databricks SQL query
+- [ ] [claude] Totals check: Power BI card = Databricks SQL query
 
 ## Phase 5 — Prove + present (Fri 20 Nov)
 

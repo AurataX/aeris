@@ -4,11 +4,11 @@ table dim_date
 
 	column Date
 		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
 		lineageTag: 780c675b-32c6-4313-b6b1-934b304cea27
 		summarizeBy: none
 		sourceColumn: [Date]
-		isKey
-		formatString: dd mmm yyyy
 
 	column Year
 		dataType: int64
@@ -37,5 +37,5 @@ table dim_date
 
 	partition dim_date = calculated
 		mode: import
-		source =
-			ADDCOLUMNS(CALENDAR(DATE(2025, 1, 1), DATE(2026, 12, 31)), "Year", YEAR([Date]), "MonthNumber", MONTH([Date]), "Month", FORMAT([Date], "MMM"), "Season", SWITCH(TRUE(), MONTH([Date]) IN {12, 1, 2}, "Winter", MONTH([Date]) IN {3, 4, 5}, "Summer", MONTH([Date]) IN {6, 7, 8, 9}, "Monsoon", "Post-monsoon"))
+		source = ADDCOLUMNS(CALENDAR(DATE(2025, 1, 1), DATE(2026, 12, 31)), "Year", YEAR([Date]), "MonthNumber", MONTH([Date]), "Month", FORMAT([Date], "MMM"), "Season", SWITCH(TRUE(), MONTH([Date]) IN {12, 1, 2}, "Winter", MONTH([Date]) IN {3, 4, 5}, "Summer", MONTH([Date]) IN {6, 7, 8, 9}, "Monsoon", "Post-monsoon"))
+

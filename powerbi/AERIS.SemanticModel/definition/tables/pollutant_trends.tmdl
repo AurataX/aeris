@@ -1,6 +1,16 @@
 table pollutant_trends
 	lineageTag: b81fba64-0f40-4ae4-a926-f96d8176be9b
 
+	measure 'Days over NAAQS limit' = CALCULATE(COUNTROWS(pollutant_trends), pollutant_trends[exceeds_naaqs] = TRUE())
+		formatString: 0
+		displayFolder: Pollutants
+		lineageTag: 601f6bde-9c7c-43e4-932b-88e0680417d5
+
+	measure '% days over NAAQS' = DIVIDE([Days over NAAQS limit], COUNTROWS(pollutant_trends))
+		formatString: 0.0%
+		displayFolder: Pollutants
+		lineageTag: a4c0334d-dfeb-4359-a243-4ce1d3425752
+
 	column city
 		dataType: string
 		lineageTag: d5e46504-8d20-42d6-9fde-29722cd80808
@@ -9,10 +19,12 @@ table pollutant_trends
 
 	column date_ist
 		dataType: dateTime
+		formatString: dd mmm yyyy
 		lineageTag: a3631fc1-13bd-41d1-a59e-726548241a9e
 		summarizeBy: none
 		sourceColumn: date_ist
-		formatString: dd mmm yyyy
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column pollutant
 		dataType: string
@@ -68,23 +80,14 @@ table pollutant_trends
 		summarizeBy: none
 		sourceColumn: source
 
-	measure 'Days over NAAQS limit' = CALCULATE(COUNTROWS(pollutant_trends), pollutant_trends[exceeds_naaqs] = TRUE())
-		formatString: 0
-		displayFolder: Pollutants
-		lineageTag: 601f6bde-9c7c-43e4-932b-88e0680417d5
-
-	measure '% days over NAAQS' = DIVIDE([Days over NAAQS limit], COUNTROWS(pollutant_trends))
-		formatString: 0.0%
-		displayFolder: Pollutants
-		lineageTag: a4c0334d-dfeb-4359-a243-4ce1d3425752
-
 	partition pollutant_trends = m
 		mode: import
 		source =
-			let
-				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
-				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
-				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
-				tbl = schema{[Name = "pollutant_trends", Kind = "Table"]}[Data]
-			in
-				tbl
+				let
+					Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+					db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+					schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+					tbl = schema{[Name = "pollutant_trends", Kind = "Table"]}[Data]
+				in
+					tbl
+

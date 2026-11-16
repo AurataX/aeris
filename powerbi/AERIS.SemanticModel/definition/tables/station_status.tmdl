@@ -1,6 +1,21 @@
 table station_status
 	lineageTag: 06cdba34-1642-455d-b8d0-73c25254b1d6
 
+	measure 'Stations in model' = DISTINCTCOUNT(station_status[station_id])
+		formatString: 0
+		displayFolder: Stations
+		lineageTag: 2750a418-de90-47de-84fb-b4725a5c8c83
+
+	measure 'Stations reporting' = CALCULATE(COUNTROWS(station_status), station_status[is_stale] = FALSE())
+		formatString: 0
+		displayFolder: Stations
+		lineageTag: 61bb3903-7a1f-41b9-85a4-891eccd9816f
+
+	measure 'Data freshness (hours)' = DATEDIFF(MAX(station_status[last_observed_at]), UTCNOW(), HOUR)
+		formatString: 0
+		displayFolder: Stations
+		lineageTag: 077af050-47e7-49dc-80fc-de427713cf9f
+
 	column station_id
 		dataType: string
 		lineageTag: 27845e99-c70e-442d-b075-f14c0a34cc12
@@ -39,10 +54,10 @@ table station_status
 
 	column last_observed_at
 		dataType: dateTime
+		formatString: dd mmm yyyy
 		lineageTag: 7f749315-996f-4347-bf36-36d45ccfb50c
 		summarizeBy: none
 		sourceColumn: last_observed_at
-		formatString: dd mmm yyyy
 
 	column pm25_latest
 		dataType: double
@@ -92,28 +107,14 @@ table station_status
 		summarizeBy: none
 		sourceColumn: source
 
-	measure 'Stations in model' = DISTINCTCOUNT(station_status[station_id])
-		formatString: 0
-		displayFolder: Stations
-		lineageTag: 2750a418-de90-47de-84fb-b4725a5c8c83
-
-	measure 'Stations reporting' = CALCULATE(COUNTROWS(station_status), station_status[is_stale] = FALSE())
-		formatString: 0
-		displayFolder: Stations
-		lineageTag: 61bb3903-7a1f-41b9-85a4-891eccd9816f
-
-	measure 'Data freshness (hours)' = DATEDIFF(MAX(station_status[last_observed_at]), UTCNOW(), HOUR)
-		formatString: 0
-		displayFolder: Stations
-		lineageTag: 077af050-47e7-49dc-80fc-de427713cf9f
-
 	partition station_status = m
 		mode: import
 		source =
-			let
-				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
-				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
-				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
-				tbl = schema{[Name = "station_status", Kind = "Table"]}[Data]
-			in
-				tbl
+				let
+					Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+					db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+					schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+					tbl = schema{[Name = "station_status", Kind = "Table"]}[Data]
+				in
+					tbl
+

@@ -39,7 +39,7 @@ apps/api/          FastAPI backend (Cloud Run)
 apps/web/          Next.js frontend (Vercel)
 apps/collector/    Cloudflare Worker cron: lands live JSON in the Databricks Volume
 supabase/migrations/  serving schema (single source of truth for Supabase)
-powerbi/           AERIS.pbip (TMDL model + PBIR report) + measures.dax
+powerbi/           AERIS.pbip (TMDL model + PBIR report); tools/ = Python generators (build.py model, report.py pages)
 docs/              documentation (source of truth)
 prompt/            original briefs + practice notebook (do not edit)
 ```
