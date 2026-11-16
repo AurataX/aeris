@@ -1,0 +1,125 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "w_wind",
+  "position": {
+    "x": 20,
+    "y": 226,
+    "z": 0,
+    "width": 400,
+    "height": 482
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "weather_pollution_daily"
+                    }
+                  },
+                  "Property": "date_ist"
+                }
+              },
+              "queryRef": "weather_pollution_daily.date_ist",
+              "nativeQueryRef": "date_ist",
+              "active": true
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "weather_pollution_daily"
+                        }
+                      },
+                      "Property": "wind_avg_kmh"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Avg(weather_pollution_daily.wind_avg_kmh)",
+              "nativeQueryRef": "Avg of wind_avg_kmh"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "weather_pollution_daily"
+                        }
+                      },
+                      "Property": "pm25_avg"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Avg(weather_pollution_daily.pm25_avg)",
+              "nativeQueryRef": "Avg of pm25_avg"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_city"
+                    }
+                  },
+                  "Property": "city"
+                }
+              },
+              "queryRef": "dim_city.city",
+              "nativeQueryRef": "city",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'PM2.5 vs wind speed'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

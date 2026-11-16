@@ -1,0 +1,165 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "s_tab",
+  "position": {
+    "x": 650,
+    "y": 226,
+    "z": 0,
+    "width": 610,
+    "height": 482
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "name"
+                }
+              },
+              "queryRef": "station_status.name",
+              "nativeQueryRef": "name",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "city"
+                }
+              },
+              "queryRef": "station_status.city",
+              "nativeQueryRef": "city",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "provider"
+                }
+              },
+              "queryRef": "station_status.provider",
+              "nativeQueryRef": "provider",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "pm25_latest"
+                }
+              },
+              "queryRef": "station_status.pm25_latest",
+              "nativeQueryRef": "pm25_latest",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "pm10_latest"
+                }
+              },
+              "queryRef": "station_status.pm10_latest",
+              "nativeQueryRef": "pm10_latest",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "naqi_24h"
+                }
+              },
+              "queryRef": "station_status.naqi_24h",
+              "nativeQueryRef": "naqi_24h",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "naqi_category"
+                }
+              },
+              "queryRef": "station_status.naqi_category",
+              "nativeQueryRef": "naqi_category",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "last_observed_at"
+                }
+              },
+              "queryRef": "station_status.last_observed_at",
+              "nativeQueryRef": "last_observed_at",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Station readings'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

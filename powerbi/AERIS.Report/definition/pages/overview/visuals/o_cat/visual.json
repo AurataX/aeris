@@ -1,0 +1,83 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "o_cat",
+  "position": {
+    "x": 20,
+    "y": 476,
+    "z": 0,
+    "width": 620,
+    "height": 232
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "naqi_category"
+                }
+              },
+              "queryRef": "city_daily_aqi.naqi_category",
+              "nativeQueryRef": "naqi_category",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "city_daily_aqi"
+                        }
+                      },
+                      "Property": "date_ist"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Count(city_daily_aqi.date_ist)",
+              "nativeQueryRef": "Count of date_ist"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Days in each AQI category'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

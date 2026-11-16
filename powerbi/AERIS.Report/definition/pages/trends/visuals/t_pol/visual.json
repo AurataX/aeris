@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "t_pol",
+  "position": {
+    "x": 20,
+    "y": 426,
+    "z": 0,
+    "width": 620,
+    "height": 282
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_pollutant"
+                    }
+                  },
+                  "Property": "display_name"
+                }
+              },
+              "queryRef": "dim_pollutant.display_name",
+              "nativeQueryRef": "display_name",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "pollutant_trends"
+                    }
+                  },
+                  "Property": "% days over NAAQS"
+                }
+              },
+              "queryRef": "pollutant_trends.% days over NAAQS",
+              "nativeQueryRef": "% days over NAAQS"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Share of days over the NAAQS limit'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

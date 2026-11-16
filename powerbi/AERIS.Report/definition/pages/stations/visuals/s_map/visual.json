@@ -1,0 +1,121 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "s_map",
+  "position": {
+    "x": 20,
+    "y": 226,
+    "z": 0,
+    "width": 620,
+    "height": 482
+  },
+  "visual": {
+    "visualType": "map",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "name"
+                }
+              },
+              "queryRef": "station_status.name",
+              "nativeQueryRef": "name",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "lat"
+                }
+              },
+              "queryRef": "station_status.lat",
+              "nativeQueryRef": "lat",
+              "active": true
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "station_status"
+                    }
+                  },
+                  "Property": "lon"
+                }
+              },
+              "queryRef": "station_status.lon",
+              "nativeQueryRef": "lon",
+              "active": true
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "station_status"
+                        }
+                      },
+                      "Property": "pm25_latest"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Avg(station_status.pm25_latest)",
+              "nativeQueryRef": "Avg of pm25_latest"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Monitoring stations'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

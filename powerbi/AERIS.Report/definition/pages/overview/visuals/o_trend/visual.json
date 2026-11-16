@@ -1,0 +1,97 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "o_trend",
+  "position": {
+    "x": 20,
+    "y": 226,
+    "z": 0,
+    "width": 760,
+    "height": 240
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "date_ist"
+                }
+              },
+              "queryRef": "city_daily_aqi.date_ist",
+              "nativeQueryRef": "date_ist",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "NAQI (avg)"
+                }
+              },
+              "queryRef": "city_daily_aqi.NAQI (avg)",
+              "nativeQueryRef": "NAQI (avg)"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_city"
+                    }
+                  },
+                  "Property": "city"
+                }
+              },
+              "queryRef": "dim_city.city",
+              "nativeQueryRef": "city",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Daily NAQI by city'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

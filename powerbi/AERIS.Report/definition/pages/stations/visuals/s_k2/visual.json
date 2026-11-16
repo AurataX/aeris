@@ -1,0 +1,64 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "s_k2",
+  "position": {
+    "x": 650,
+    "y": 124,
+    "z": 0,
+    "width": 300,
+    "height": 92
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "station_status"
+                        }
+                      },
+                      "Property": "station_id"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Count(station_status.station_id)",
+              "nativeQueryRef": "Count of station_id"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Stations in model'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

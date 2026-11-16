@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "t_p95",
+  "position": {
+    "x": 650,
+    "y": 426,
+    "z": 0,
+    "width": 610,
+    "height": 282
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "pollutant_trends"
+                    }
+                  },
+                  "Property": "date_ist"
+                }
+              },
+              "queryRef": "pollutant_trends.date_ist",
+              "nativeQueryRef": "date_ist",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "pollutant_trends"
+                        }
+                      },
+                      "Property": "p95_value"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Avg(pollutant_trends.p95_value)",
+              "nativeQueryRef": "Avg of p95_value"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "pollutant_trends"
+                    }
+                  },
+                  "Property": "pollutant"
+                }
+              },
+              "queryRef": "pollutant_trends.pollutant",
+              "nativeQueryRef": "pollutant",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pollutant level over time'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "t_month",
+  "position": {
+    "x": 20,
+    "y": 126,
+    "z": 0,
+    "width": 620,
+    "height": 290
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "Month"
+                }
+              },
+              "queryRef": "dim_date.Month",
+              "nativeQueryRef": "Month",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "PM2.5 avg"
+                }
+              },
+              "queryRef": "city_daily_aqi.PM2.5 avg",
+              "nativeQueryRef": "PM2.5 avg"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "PM10 avg"
+                }
+              },
+              "queryRef": "city_daily_aqi.PM10 avg",
+              "nativeQueryRef": "PM10 avg"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'PM2.5 and PM10 by month'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

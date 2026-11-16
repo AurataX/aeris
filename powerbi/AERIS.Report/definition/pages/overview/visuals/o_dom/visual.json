@@ -1,0 +1,83 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "o_dom",
+  "position": {
+    "x": 650,
+    "y": 476,
+    "z": 0,
+    "width": 300,
+    "height": 232
+  },
+  "visual": {
+    "visualType": "donutChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "dominant_pollutant"
+                }
+              },
+              "queryRef": "city_daily_aqi.dominant_pollutant",
+              "nativeQueryRef": "dominant_pollutant",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "city_daily_aqi"
+                        }
+                      },
+                      "Property": "date_ist"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Count(city_daily_aqi.date_ist)",
+              "nativeQueryRef": "Count of date_ist"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dominant pollutant'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

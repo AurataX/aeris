@@ -1,0 +1,64 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "w_k3",
+  "position": {
+    "x": 965,
+    "y": 124,
+    "z": 0,
+    "width": 300,
+    "height": 92
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "weather_pollution_daily"
+                        }
+                      },
+                      "Property": "precip_sum_mm"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(weather_pollution_daily.precip_sum_mm)",
+              "nativeQueryRef": "Sum of precip_sum_mm"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Total rain (mm)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

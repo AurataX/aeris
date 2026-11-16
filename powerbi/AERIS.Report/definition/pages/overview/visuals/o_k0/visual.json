@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "o_k0",
+  "position": {
+    "x": 20,
+    "y": 124,
+    "z": 0,
+    "width": 300,
+    "height": 92
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
+                    }
+                  },
+                  "Property": "NAQI (avg)"
+                }
+              },
+              "queryRef": "city_daily_aqi.NAQI (avg)",
+              "nativeQueryRef": "NAQI (avg)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'NAQI average'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
