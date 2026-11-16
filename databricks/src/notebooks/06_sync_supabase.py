@@ -41,3 +41,14 @@ log = spark.createDataFrame([(run_id, started, datetime.now(timezone.utc), "succ
                             "run_id string, started_at timestamp, finished_at timestamp, status string, rows_upserted string")
 log.write.mode("append").saveAsTable(table("ops", "sync_runs"))
 display(log)
+
+# COMMAND ----------
+
+# Tell the website new data is ready. If this fails the site still refreshes itself every 5 minutes.
+import urllib.request
+try:
+    req = urllib.request.Request(dbutils.secrets.get(SECRET_SCOPE, "web_url") + "/api/revalidate", method="POST",
+                                 headers={"x-revalidate-secret": dbutils.secrets.get(SECRET_SCOPE, "web_revalidate_secret")})
+    print("revalidate:", urllib.request.urlopen(req, timeout=20).read().decode())
+except Exception as e:
+    print("revalidate skipped:", e)
