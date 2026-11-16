@@ -27,6 +27,14 @@ for name, comment in schemas.items():
 
 display(spark.sql(f"SHOW SCHEMAS IN {CATALOG}"))
 
+# ops tables exist from day one, so the dashboard's Pipeline page never errors on a fresh setup
+spark.sql(f"""CREATE TABLE IF NOT EXISTS {table('ops', 'table_stats')}
+              (run_id STRING, table_name STRING, layer STRING, row_count BIGINT, computed_at TIMESTAMP)
+              COMMENT 'Row counts per table after each validated run'""")
+spark.sql(f"""CREATE TABLE IF NOT EXISTS {table('ops', 'sync_runs')}
+              (run_id STRING, started_at TIMESTAMP, finished_at TIMESTAMP, status STRING, rows_upserted STRING)
+              COMMENT 'One row per Gold -> Supabase sync'""")
+
 # COMMAND ----------
 
 # small static dimensions -> overwrite is fine, rerun gives the same result
