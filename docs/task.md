@@ -32,7 +32,7 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [ ] [claude] Confirm whether CPCB `avg_value` is a concentration or a sub-index (compare with OpenAQ for the same station + hour)
 - [ ] [you] OK → [claude] Supabase project `aeris` (free, ap-south-1) + migration; [you] set the role passwords in the SQL editor
 - [x] [claude] OpenAQ coverage: 120 locations in the NCR bbox, 85 active since 2025, **62 reference monitors** with PM2.5 (61 CPCB + 1 AirNow)
-- [x] [claude] S3 bucket `aeris-lake-072857` (ap-south-1, private, SSE-S3, tagged) + archive sync for 62 monitors, 2025–2026 (copy running in background)
+- [x] [claude] S3 bucket `aeris-lake-072857` (ap-south-1, private, SSE-S3, tagged) + archive sync for 62 monitors, 2025–2026 → **35,540 files, 161 MB** (one-time `aws s3 sync`, server-side, incremental on rerun)
 - [x] [claude] IAM role `aeris-uc-s3-read` (read-only) → storage credential `aeris_s3_read` → validate READ/LIST/PATH_EXISTS = PASS → external location `aeris_openaq_archive` (read-only)
 - [x] [claude] Cross-cloud proof: `read_files('s3://…/locationid=17/year=2025/month=02/')` returned 6 pollutants from the SQL warehouse
 - [x] [claude] SQL Warehouse `aeris-wh` (id `5da0413f120f41ed`, serverless 2X-Small, auto-stop 5 min); serverless confirmed available
