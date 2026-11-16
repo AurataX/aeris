@@ -1,135 +1,135 @@
 table city_daily_aqi
-	lineageTag: f5a2972a-0d78-4b9e-94b4-bfd759296319
+	lineageTag: de91cd6f-1431-4233-80aa-c078ce2d6347
 
 	column city
 		dataType: string
-		lineageTag: c8fd7f64-00fd-43f3-a1fd-8657fec7a58a
+		lineageTag: b94eb769-a167-46af-bcaf-e369b393f7f2
 		summarizeBy: none
 		sourceColumn: city
 
 	column date_ist
 		dataType: dateTime
-		lineageTag: 8088d91b-0b1a-4462-80b1-eea1d0c68bd1
+		lineageTag: d31fd66a-d3a0-436d-bcb3-2b388007a209
 		summarizeBy: none
 		sourceColumn: date_ist
 		formatString: dd mmm yyyy
 
 	column naqi
 		dataType: int64
-		lineageTag: fd115bef-a079-4744-bf4e-871fb6dd72d6
+		lineageTag: ff294849-5e3f-4a55-be09-a126dabb3b56
 		summarizeBy: none
 		sourceColumn: naqi
 
 	column naqi_category
 		dataType: string
-		lineageTag: 9912b50f-b1e6-40e7-b5cf-12f90c7d9c86
+		lineageTag: 865f5d9a-1352-459d-93ba-f732a0c86703
 		summarizeBy: none
 		sourceColumn: naqi_category
 
 	column dominant_pollutant
 		dataType: string
-		lineageTag: 89ab52ce-e77a-4a6c-b5da-e2afe5fe2341
+		lineageTag: 0f3c8ec8-c5e3-4223-977e-659dc99f94a1
 		summarizeBy: none
 		sourceColumn: dominant_pollutant
 
 	column pollutants_used
 		dataType: int64
-		lineageTag: cbc80932-1ad9-402e-870c-7b000eb11acc
+		lineageTag: f038d083-fa4d-40e1-8ebe-6ce489031d0d
 		summarizeBy: none
 		sourceColumn: pollutants_used
 
 	column pm25_avg
 		dataType: double
-		lineageTag: 760435d3-dd32-4da3-8140-c570c367e4d9
+		lineageTag: a064ad85-8018-4bb1-803d-3039e86fa42d
 		summarizeBy: sum
 		sourceColumn: pm25_avg
 
 	column pm10_avg
 		dataType: double
-		lineageTag: 6b0b528b-4257-4cac-b8dc-8f562849be3e
+		lineageTag: a5cb3641-5646-4192-bb6a-f8b2ea98d3b6
 		summarizeBy: sum
 		sourceColumn: pm10_avg
 
 	column no2_avg
 		dataType: double
-		lineageTag: c02f148b-2060-4694-84f6-1a990d82ef75
+		lineageTag: fa7727e1-0951-40bd-ab89-02da37d6a7ad
 		summarizeBy: sum
 		sourceColumn: no2_avg
 
 	column so2_avg
 		dataType: double
-		lineageTag: 73229b63-0846-4c71-8025-e75b4f126efe
+		lineageTag: 7a0adad0-27f6-40dc-bfc5-ea18c0d8fe3b
 		summarizeBy: sum
 		sourceColumn: so2_avg
 
 	column o3_max8h
 		dataType: double
-		lineageTag: db9d8277-03f9-4467-9c24-9e82bcf14745
+		lineageTag: 2a309a44-92d9-4a0f-87da-683559b00262
 		summarizeBy: sum
 		sourceColumn: o3_max8h
 
 	column stations_count
 		dataType: int64
-		lineageTag: 27dc41ab-e6af-4fe8-ac17-6225d522655c
+		lineageTag: 87c9b409-0f16-44f8-9784-c5cbfde71f9d
 		summarizeBy: none
 		sourceColumn: stations_count
 
 	column index_standard
 		dataType: string
-		lineageTag: 9b2df9c3-216f-423e-ab71-129bbfa092fb
+		lineageTag: f0296feb-0a34-4a83-a299-4509d51622d9
 		summarizeBy: none
 		sourceColumn: index_standard
 
 	column source
 		dataType: string
-		lineageTag: d550aa81-a1ce-4e42-9f88-294ee5132e7e
+		lineageTag: 235e6961-3ba6-4ad0-bdd7-46ac190e2c4c
 		summarizeBy: none
 		sourceColumn: source
 
 	measure 'NAQI (avg)' = AVERAGE(city_daily_aqi[naqi])
 		formatString: 0
 		displayFolder: AQI
-		lineageTag: 1b5482b4-2c95-436e-9f29-94c955a6ef15
+		lineageTag: 6e5bafdf-cdd7-4a40-93c0-acf409149eca
 
 	measure 'NAQI (peak)' = MAX(city_daily_aqi[naqi])
 		formatString: 0
 		displayFolder: AQI
-		lineageTag: c29aca0e-b42a-424b-8709-16bf6fb0129a
+		lineageTag: 5c4f31c4-30a6-4ed5-8bf4-55c6a3ea5cc9
 
 	measure 'Very Poor+ days' = CALCULATE(COUNTROWS(city_daily_aqi), city_daily_aqi[naqi] > 300)
 		formatString: 0
 		displayFolder: AQI
-		lineageTag: aa5b28cb-fafe-4619-94aa-b674bcae5b71
+		lineageTag: 0f8b4121-f8f9-40b9-a5a2-6078bba61f57
 
 	measure 'Days with data' = CALCULATE(COUNTROWS(city_daily_aqi), NOT ISBLANK(city_daily_aqi[naqi]))
 		formatString: 0
 		displayFolder: AQI
-		lineageTag: a6dc9fad-a94c-44a4-897e-d180547d9079
+		lineageTag: 4cff8d7d-f4a7-489a-a2d7-1fff6aa74b41
 
 	measure '% days Very Poor+' = DIVIDE([Very Poor+ days], [Days with data])
 		formatString: 0.0%
 		displayFolder: AQI
-		lineageTag: fbc0fde4-87b0-4667-b0ea-bb8bf655c6ff
+		lineageTag: 8e023f20-e233-4c93-8ec7-d62a7b441d50
 
 	measure 'NAQI 7-day rolling' = AVERAGEX(DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY), [NAQI (avg)])
 		formatString: 0
 		displayFolder: AQI
-		lineageTag: d57552de-083b-4009-ad71-99a2a594a9f9
+		lineageTag: 8859ca42-774e-415c-a304-6a142f2c2fbe
 
 	measure 'NAQI vs last month' = [NAQI (avg)] - CALCULATE([NAQI (avg)], DATEADD(dim_date[Date], -1, MONTH))
 		formatString: +0;-0;0
 		displayFolder: AQI
-		lineageTag: 6016bb23-f489-489d-a012-3ecd5d730c33
+		lineageTag: 3ba3d677-6ed1-48f3-a9a5-d29f326b3d03
 
 	measure 'PM2.5 avg' = AVERAGE(city_daily_aqi[pm25_avg])
 		formatString: 0.0
 		displayFolder: Pollutants
-		lineageTag: d26adf8c-dba3-46ac-a70c-d8e81e945dce
+		lineageTag: 2abe7fb4-b565-44dd-89fa-184a3fbf6577
 
 	measure 'PM10 avg' = AVERAGE(city_daily_aqi[pm10_avg])
 		formatString: 0.0
 		displayFolder: Pollutants
-		lineageTag: ed84f199-2ecd-4a1a-9060-efbc8c38b184
+		lineageTag: 966d4cce-79ae-46c3-9eb2-1f0f3a0ad43e
 
 	partition city_daily_aqi = m
 		mode: import

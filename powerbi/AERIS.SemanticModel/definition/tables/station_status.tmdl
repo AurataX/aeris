@@ -1,111 +1,111 @@
 table station_status
-	lineageTag: 8120c49c-2c98-48f1-9240-4e7ccdaf2bd9
+	lineageTag: 06cdba34-1642-455d-b8d0-73c25254b1d6
 
 	column station_id
 		dataType: string
-		lineageTag: 1fdf2fbc-ab79-4f52-860f-4422b56111b0
+		lineageTag: 27845e99-c70e-442d-b075-f14c0a34cc12
 		summarizeBy: none
 		sourceColumn: station_id
 
 	column name
 		dataType: string
-		lineageTag: 0822f650-7a70-4bcb-a8e3-e07b843338c4
+		lineageTag: 76e1c242-bef2-494c-b272-25b33e200a75
 		summarizeBy: none
 		sourceColumn: name
 
 	column city
 		dataType: string
-		lineageTag: 78d58d42-cd67-430a-94ab-888c624461b0
+		lineageTag: d98ac583-18e9-4f73-99a4-9b7fa3547e13
 		summarizeBy: none
 		sourceColumn: city
 
 	column lat
 		dataType: double
-		lineageTag: 88147873-165d-4e7b-b69f-9c4fd842fd7a
+		lineageTag: d2ae7d7e-4e79-46ba-9df3-8df2e2dbdbbb
 		summarizeBy: none
 		sourceColumn: lat
 
 	column lon
 		dataType: double
-		lineageTag: 1cee680d-8347-4157-aa1b-a7091cee878e
+		lineageTag: 70c0db93-ccfa-4dd1-8165-0312cc132440
 		summarizeBy: none
 		sourceColumn: lon
 
 	column provider
 		dataType: string
-		lineageTag: bc79f6a5-ace6-4103-815d-4967d63f8d2a
+		lineageTag: 96309549-ff44-4b9a-86bd-7c047713252d
 		summarizeBy: none
 		sourceColumn: provider
 
 	column last_observed_at
 		dataType: dateTime
-		lineageTag: 76f6b719-09f4-42c8-ab74-dae9c2e5ac93
+		lineageTag: 7f749315-996f-4347-bf36-36d45ccfb50c
 		summarizeBy: none
 		sourceColumn: last_observed_at
 		formatString: dd mmm yyyy
 
 	column pm25_latest
 		dataType: double
-		lineageTag: fc142cd6-45b3-4675-a43f-85ce5a1fe9e5
+		lineageTag: 328b7887-c367-461c-a23a-de52d0579a76
 		summarizeBy: sum
 		sourceColumn: pm25_latest
 
 	column pm10_latest
 		dataType: double
-		lineageTag: 70532e1e-2971-430b-98a2-cbc224eb98e3
+		lineageTag: f1d7e608-e91d-4bc0-9f37-b6fae25a21f8
 		summarizeBy: sum
 		sourceColumn: pm10_latest
 
 	column no2_latest
 		dataType: double
-		lineageTag: e15edc35-8e16-4272-b2e8-c690cf63c3a6
+		lineageTag: 98363513-4072-41dd-b4a0-c90734762e38
 		summarizeBy: sum
 		sourceColumn: no2_latest
 
 	column o3_latest
 		dataType: double
-		lineageTag: d8c59115-2c9b-4316-b15a-250c95d4418a
+		lineageTag: cfd43957-75b2-418b-aa25-75b1529ba5ee
 		summarizeBy: sum
 		sourceColumn: o3_latest
 
 	column naqi_24h
 		dataType: int64
-		lineageTag: 5c0edd7e-c272-4585-8c4e-df2719d3c230
+		lineageTag: 383b1e92-6071-4fb1-8f46-26600160e382
 		summarizeBy: none
 		sourceColumn: naqi_24h
 
 	column naqi_category
 		dataType: string
-		lineageTag: d0a56517-2b4c-48b6-aee2-7170794a3188
+		lineageTag: 6b33a8fa-cd59-4f34-b2ce-30d2e2a7643b
 		summarizeBy: none
 		sourceColumn: naqi_category
 
 	column is_stale
 		dataType: boolean
-		lineageTag: 2cc040e1-8d87-489d-bc9e-ded13ec4458d
+		lineageTag: fc5112a4-cf98-4905-8871-e61be58b00a5
 		summarizeBy: none
 		sourceColumn: is_stale
 
 	column source
 		dataType: string
-		lineageTag: ec68f0fd-a7f2-4000-9fb9-0e4ba398863e
+		lineageTag: 46bad924-a107-48ef-a1e2-9fd5975bc82b
 		summarizeBy: none
 		sourceColumn: source
 
 	measure 'Stations in model' = DISTINCTCOUNT(station_status[station_id])
 		formatString: 0
 		displayFolder: Stations
-		lineageTag: 4364ea5c-ccf4-44f2-b5fc-3f2dc0c17a6d
+		lineageTag: 2750a418-de90-47de-84fb-b4725a5c8c83
 
 	measure 'Stations reporting' = CALCULATE(COUNTROWS(station_status), station_status[is_stale] = FALSE())
 		formatString: 0
 		displayFolder: Stations
-		lineageTag: b159da3c-232f-4bce-8d4b-27240031dc2d
+		lineageTag: 61bb3903-7a1f-41b9-85a4-891eccd9816f
 
 	measure 'Data freshness (hours)' = DATEDIFF(MAX(station_status[last_observed_at]), UTCNOW(), HOUR)
 		formatString: 0
 		displayFolder: Stations
-		lineageTag: b8cc8855-1081-4edf-bb70-13deb5c13fac
+		lineageTag: 077af050-47e7-49dc-80fc-de427713cf9f
 
 	partition station_status = m
 		mode: import

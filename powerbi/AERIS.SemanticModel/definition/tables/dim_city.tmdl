@@ -1,27 +1,27 @@
 table dim_city
-	lineageTag: 79027629-02ea-4de0-8482-d1aa088a3794
+	lineageTag: fd24dd2d-2243-453a-a6ed-89dfcf5dd98e
 
 	column city
 		dataType: string
-		lineageTag: 53c94d69-c019-48cb-b0d5-417fb3ee7d2f
+		lineageTag: fdbb2b5b-247d-48f3-9644-588e34c84ccf
 		summarizeBy: none
 		sourceColumn: city
 
 	column state
 		dataType: string
-		lineageTag: 16816cda-53cb-4562-a78a-d676ad76ae4a
+		lineageTag: 231fc680-ccf4-4ef8-8882-07b4b110cfb1
 		summarizeBy: none
 		sourceColumn: state
 
 	column lat
 		dataType: double
-		lineageTag: 670e14ab-e491-42f4-bc99-3bcca84b4bc1
+		lineageTag: a66160cb-e243-4aca-8605-797b000d3b0e
 		summarizeBy: none
 		sourceColumn: lat
 
 	column lon
 		dataType: double
-		lineageTag: 7b01ff6f-84b7-4099-9583-c83369831907
+		lineageTag: 2b66d54d-0bba-47fd-a43e-060a981d9ac3
 		summarizeBy: none
 		sourceColumn: lon
 

@@ -1,77 +1,77 @@
 table weather_pollution_daily
-	lineageTag: 12e3c899-bc36-4d97-960f-6485e6cde4d8
+	lineageTag: 571296f3-6607-4039-a8ad-c6a4114b758d
 
 	column city
 		dataType: string
-		lineageTag: 3890e6b6-0a0e-422f-95d7-02717c90c616
+		lineageTag: 33919e88-3200-4d4c-b485-ea0889dd1312
 		summarizeBy: none
 		sourceColumn: city
 
 	column date_ist
 		dataType: dateTime
-		lineageTag: 35074652-b924-48ac-bced-8433586af7a0
+		lineageTag: 2be7346a-423e-487c-99f0-d3ca9c22f55f
 		summarizeBy: none
 		sourceColumn: date_ist
 		formatString: dd mmm yyyy
 
 	column naqi
 		dataType: int64
-		lineageTag: fefe72a3-abac-4d02-b675-2aa94410ddbf
+		lineageTag: f19cda33-95fd-4fb2-b8ff-2ba0807f3854
 		summarizeBy: none
 		sourceColumn: naqi
 
 	column pm25_avg
 		dataType: double
-		lineageTag: bfe2da79-d27c-4aea-b840-b5ee1825464f
+		lineageTag: 532dd55b-3792-4bef-8bb7-477013c27687
 		summarizeBy: sum
 		sourceColumn: pm25_avg
 
 	column pm10_avg
 		dataType: double
-		lineageTag: cbe2e7e4-4a35-41dc-9e09-b878fff0d08f
+		lineageTag: a271a700-2bb1-4738-afc0-3c1e4b0f413c
 		summarizeBy: sum
 		sourceColumn: pm10_avg
 
 	column temp_avg_c
 		dataType: double
-		lineageTag: cd94dad9-c19b-4310-b014-ca21c5cc8383
+		lineageTag: 76979d65-b6a5-401e-96a2-f26a6860533f
 		summarizeBy: sum
 		sourceColumn: temp_avg_c
 
 	column humidity_avg_pct
 		dataType: double
-		lineageTag: 752af6f4-c223-4650-93b2-8f3faf9a7358
+		lineageTag: f9c636f8-8514-4bf4-8877-39c4e49929db
 		summarizeBy: sum
 		sourceColumn: humidity_avg_pct
 
 	column wind_avg_kmh
 		dataType: double
-		lineageTag: 61bd19ec-3028-4424-90bf-80f03bd775f1
+		lineageTag: b8805361-d8e3-4ac4-b732-684fefd70bfe
 		summarizeBy: sum
 		sourceColumn: wind_avg_kmh
 
 	column precip_sum_mm
 		dataType: double
-		lineageTag: 3a28f2a5-1cad-412f-acec-24f70615f594
+		lineageTag: 848bdbd2-9f3c-4a7f-8685-813c99af0df4
 		summarizeBy: sum
 		sourceColumn: precip_sum_mm
 
 	column pressure_avg_hpa
 		dataType: double
-		lineageTag: 8ca6170e-c60b-47f7-9a49-646fbe8d2c72
+		lineageTag: 45c6b7b1-a2b0-45b8-9fad-8e2601cc199f
 		summarizeBy: sum
 		sourceColumn: pressure_avg_hpa
 
 	column weather_is_modeled
 		dataType: boolean
-		lineageTag: 7550eeef-0538-4c01-8f02-04908cb7c586
+		lineageTag: d1b5ee98-a0a0-44e6-925e-d80929ebbf92
 		summarizeBy: none
 		sourceColumn: weather_is_modeled
 
 	measure 'Pearson r (PM2.5, wind)' = VAR t = FILTER(weather_pollution_daily, NOT ISBLANK(weather_pollution_daily[pm25_avg]) && NOT ISBLANK(weather_pollution_daily[wind_avg_kmh])) VAR mx = AVERAGEX(t, weather_pollution_daily[wind_avg_kmh]) VAR my = AVERAGEX(t, weather_pollution_daily[pm25_avg]) RETURN DIVIDE(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)*(weather_pollution_daily[pm25_avg]-my)), SQRT(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)^2) * SUMX(t, (weather_pollution_daily[pm25_avg]-my)^2)))
 		formatString: 0.00
 		displayFolder: Weather
-		lineageTag: ffd6f012-af6f-42cf-baaf-f884585e1436
+		lineageTag: f9e84f02-8fa7-4770-9e39-99ac5a730ab0
 
 	partition weather_pollution_daily = m
 		mode: import

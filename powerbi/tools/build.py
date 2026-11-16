@@ -37,7 +37,7 @@ def date_table():
 write(os.path.join(MODEL, "definition.pbism"), json.dumps({"version": "4.2", "settings": {}}, indent=2))
 write(os.path.join(MODEL, "definition", "database.tmdl"), "database AERIS\n\tcompatibilityLevel: 1604\n")
 write(os.path.join(MODEL, "definition", "model.tmdl"),
-      "model Model\n\tculture: en-US\n\tdefaultPowerBIDataSourceVersion: powerBI_V3\n\n"
+      "model Model\n\tculture: en-US\n\tdefaultPowerBIDataSourceVersion: powerBI_V3\n\tannotation __PBI_TimeIntelligenceEnabled = 0\n\n"
       + "".join(f"ref table {t}\n" for t in [*TABLES, "dim_date"]))
 for name, cols in TABLES.items():
     write(os.path.join(MODEL, "definition", "tables", f"{name}.tmdl"), import_table(name, cols, MEASURES.get(name, [])))

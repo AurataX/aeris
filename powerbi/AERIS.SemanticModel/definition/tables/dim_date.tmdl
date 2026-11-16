@@ -1,10 +1,10 @@
 table dim_date
-	lineageTag: 863b1e21-f399-4d37-a855-56605bcc0b0d
+	lineageTag: 667ce944-c4ed-40f0-a16e-2b9d43f90d3f
 	dataCategory: Time
 
 	column Date
 		dataType: dateTime
-		lineageTag: 35742467-f3c9-41da-a523-3d4a513bd08f
+		lineageTag: 780c675b-32c6-4313-b6b1-934b304cea27
 		summarizeBy: none
 		sourceColumn: [Date]
 		isKey
@@ -12,26 +12,26 @@ table dim_date
 
 	column Year
 		dataType: int64
-		lineageTag: 82233987-e8b9-4c4b-801f-6fbcafb75520
+		lineageTag: d8d28e7f-16e2-43d0-880b-23203db580cf
 		summarizeBy: none
 		sourceColumn: [Year]
 
 	column MonthNumber
 		dataType: int64
-		lineageTag: 30ae798e-d9a4-4fb7-a58f-e995b58265a0
+		lineageTag: 820b445e-7f23-400a-92ec-2d8279022476
 		summarizeBy: none
 		sourceColumn: [MonthNumber]
 
 	column Month
 		dataType: string
-		lineageTag: df018b48-103c-49e2-80b5-518891733a85
+		lineageTag: b3c1aee4-d518-467b-9599-6bb62fc82881
 		summarizeBy: none
 		sourceColumn: [Month]
 		sortByColumn: MonthNumber
 
 	column Season
 		dataType: string
-		lineageTag: cac7aab8-ada9-41fa-97ac-2b1f4d6c9f0c
+		lineageTag: 886fcf64-8e50-4ad9-9e83-47fae53aa1c8
 		summarizeBy: none
 		sourceColumn: [Season]
 

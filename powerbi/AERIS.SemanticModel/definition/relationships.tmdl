@@ -1,31 +1,31 @@
-relationship 7bfbac43-eca7-45a1-9ed6-1c3dc48bcb6a
+relationship 38a4f127-ba76-43f0-b066-0ad3f68e7ab8
 	fromColumn: city_daily_aqi.city
 	toColumn: dim_city.city
 
-relationship c1293bf8-4baa-413d-9268-e0e18e230474
+relationship ec95703c-0bca-489d-aee2-eaff67c1634b
 	fromColumn: pollutant_trends.city
 	toColumn: dim_city.city
 
-relationship 291758d5-c7b0-4db0-a669-faf09a02d304
+relationship 69c06fee-5097-494f-98aa-3fdc4e4295cc
 	fromColumn: weather_pollution_daily.city
 	toColumn: dim_city.city
 
-relationship acfec654-8e32-4191-94d3-93c1d920dffa
+relationship a4ca8065-b569-47dc-a155-8164becb8b8e
 	fromColumn: station_status.city
 	toColumn: dim_city.city
 
-relationship d7ecf7e3-a183-4506-9319-0a605556027d
+relationship 68dba96e-dca9-43ba-83e9-201c24b3950c
 	fromColumn: city_daily_aqi.date_ist
 	toColumn: dim_date.Date
 
-relationship 13447e17-6c13-4726-9552-65217063b59f
+relationship 05ada27d-eab4-48dd-84c1-9f66f56a0b23
 	fromColumn: pollutant_trends.date_ist
 	toColumn: dim_date.Date
 
-relationship 0999ca3e-f194-4840-b251-563764fa9f07
+relationship e36c9be2-cbe2-4606-b7c3-8a7b9fb8d145
 	fromColumn: weather_pollution_daily.date_ist
 	toColumn: dim_date.Date
 
-relationship 769687d4-31ed-4e22-b59a-e77e6e723e86
+relationship 80f4cf3d-d437-44eb-8b5d-2f91ae3a58ec
 	fromColumn: pollutant_trends.pollutant
 	toColumn: dim_pollutant.pollutant
