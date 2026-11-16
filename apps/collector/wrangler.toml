@@ -1,0 +1,12 @@
+name = "aeris-collector"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+
+[triggers]
+crons = ["*/30 * * * *", "15,45 * * * *"]
+
+[vars]
+DATABRICKS_HOST = "https://adb-7405619537081466.6.azuredatabricks.net"
+
+# secrets (set with `npx wrangler secret put <NAME>`): DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET,
+# OPENAQ_API_KEY, DATA_GOV_IN_API_KEY

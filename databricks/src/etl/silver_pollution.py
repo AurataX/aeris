@@ -9,12 +9,14 @@ from aeris.config import POLLUTANTS, table
 @dp.expect_or_drop("timestamp_valid", "ts IS NOT NULL")
 @dp.expect_or_drop("pm25_plausible", "pollutant <> 'pm25' OR original_value <= 1500")
 def pollutant_readings():
-    return (spark.read.table(table("bronze", "openaq_archive_raw"))
-            .select(concat(lit("openaq:"), col("location_id")).alias("station_id"),
-                    lower(col("parameter")).alias("pollutant"),
-                    col("units").alias("original_unit"),
-                    col("value").cast("double").alias("original_value"),
-                    to_timestamp(col("datetime")).alias("ts"))
+    archive = (spark.read.table(table("bronze", "openaq_archive_raw"))
+               .select(concat(lit("openaq:"), col("location_id")).alias("station_id"),
+                       lower(col("parameter")).alias("pollutant"),
+                       col("units").alias("original_unit"),
+                       col("value").cast("double").alias("original_value"),
+                       to_timestamp(col("datetime")).alias("ts")))
+    # history from S3 plus the newest readings from the live collector
+    return (archive.unionByName(spark.read.table("live_readings"))
             .filter(col("pollutant").isin(list(POLLUTANTS))))
 
 
