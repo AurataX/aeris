@@ -49,11 +49,11 @@ export type TableStat = {
 
 export async function get<T>(path: string): Promise<T | null> {
   "use cache";
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cacheLife({ stale: 60, revalidate: 3600, expire: 86400 });
   cacheTag("gold");
   try {
     const r = await fetch(`${BASE}/api/v1${path}`, {
-      next: { revalidate: 300, tags: ["gold"] },
+      next: { revalidate: 3600, tags: ["gold"] },
       signal: AbortSignal.timeout(15000),
     });
     return r.ok ? ((await r.json()) as T) : null;
@@ -69,7 +69,7 @@ export const getCities = () =>
 export const getStations = () => get<{ data: Station[] }>("/stations");
 export async function getDaily(city: string, days = 90) {
   "use cache";
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cacheLife({ stale: 60, revalidate: 3600, expire: 86400 });
   cacheTag("gold");
   const end = new Date().toISOString().slice(0, 10);
   const start = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
