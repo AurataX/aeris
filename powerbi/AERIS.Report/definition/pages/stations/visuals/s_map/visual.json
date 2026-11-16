@@ -9,7 +9,7 @@
     "height": 482
   },
   "visual": {
-    "visualType": "scatterChart",
+    "visualType": "map",
     "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
@@ -29,29 +29,6 @@
               "queryRef": "station_status.name",
               "nativeQueryRef": "name",
               "active": true
-            }
-          ]
-        },
-        "X": {
-          "projections": [
-            {
-              "field": {
-                "Aggregation": {
-                  "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "station_status"
-                        }
-                      },
-                      "Property": "lon"
-                    }
-                  },
-                  "Function": 1
-                }
-              },
-              "queryRef": "Avg(station_status.lon)",
-              "nativeQueryRef": "Avg of lon"
             }
           ]
         },
@@ -75,6 +52,29 @@
               },
               "queryRef": "Avg(station_status.lat)",
               "nativeQueryRef": "Avg of lat"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "station_status"
+                        }
+                      },
+                      "Property": "lon"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Avg(station_status.lon)",
+              "nativeQueryRef": "Avg of lon"
             }
           ]
         },
@@ -117,7 +117,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Station locations (size = PM2.5)'"
+                  "Value": "'Monitoring stations (size = PM2.5)'"
                 }
               }
             }

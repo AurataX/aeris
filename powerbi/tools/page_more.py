@@ -19,5 +19,5 @@ def stations():
     return header("s", "Stations") + kpis("s", [
         ("Stations reporting", ("m", S, "Stations reporting")), ("Data freshness (hours)", ("m", S, "Data freshness (hours)")),
         ("Stations in model", ("m", S, "Stations in model")), ("Average latest PM2.5", ("a", S, "pm25_latest", 1))]) + [
-        visual("s_map", "scatterChart", (20, 226, 620, 482), {"Category": [("c", S, "name")], "X": [("a", S, "lon", 1)], "Y": [("a", S, "lat", 1)], "Size": [("a", S, "pm25_latest", 1)]}, "Station locations (size = PM2.5)"),
+        visual("s_map", "map", (20, 226, 620, 482), {"Category": [("c", S, "name")], "Y": [("a", S, "lat", 1)], "X": [("a", S, "lon", 1)], "Size": [("a", S, "pm25_latest", 1)]}, "Monitoring stations (size = PM2.5)"),
         visual("s_tab", "tableEx", (650, 226, 610, 482), {"Values": cols}, "Station readings")]
