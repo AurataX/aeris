@@ -26,7 +26,10 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [x] [claude] Secret scope `aeris` created; [you] keys stored: `openaq_api_key`, `data_gov_in_api_key`
 - [x] [claude] Supabase project `aeris` created (ref `ttdduchixyhuzpnkodyj`, ap-south-1, free, org Tektable)
 - [ ] [claude] OpenAQ coverage check: NCR locations with PM2.5 in the last 30 days, licenses → recorded in `data-sources.md`
-- [ ] [claude] CPCB check with our key: confirm fields + `avg_value` meaning → `data-sources.md`
+- [x] [claude] CPCB check with our key: 200 OK, 3,955 records, fields confirmed; needs a browser User-Agent (else 502) → `data-sources.md`
+- [x] [claude] OpenAQ key check: 200 OK, 120 locations in the NCR bbox
+- [x] [claude] Supabase `supabase_sync_db_url` secret connects as `aeris_sync`
+- [ ] [claude] Confirm whether CPCB `avg_value` is a concentration or a sub-index (compare with OpenAQ for the same station + hour)
 - [ ] [you] OK → [claude] Supabase project `aeris` (free, ap-south-1) + migration; [you] set the role passwords in the SQL editor
 - [ ] [you] OK → [claude] S3 bucket + sync the NCR archive subset (Jan 2025 → now); report file count and size
 - [ ] [claude] UC storage credential + external location for S3 (or record the fallback)

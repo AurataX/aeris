@@ -8,7 +8,7 @@ Status legend: ✅ verified with a real request on 16 Nov 2026 · ⏳ verify at 
 |---|---|---|---|---|---|---|
 | A | OpenAQ archive on AWS Open Data | CSV.gz files (hourly) | Station-level pollutant history | none (public bucket) | Historical backfill → S3 → Bronze | ✅ |
 | B | OpenAQ API v3 | REST JSON | Locations, sensors, latest readings | `X-API-Key` | Station metadata + collector "latest" | ⏳ (401 without key, as expected) |
-| C | CPCB real-time AQI (data.gov.in) | REST JSON | Official CPCB station readings, hourly | `api-key` param | Third source; collector snapshots | ✅ endpoint live · ⏳ fields with own key |
+| C | CPCB real-time AQI (data.gov.in) | REST JSON | Official CPCB station readings, hourly | `api-key` param + browser `User-Agent` | Third source; collector snapshots | ✅ verified with our key |
 | D | Open-Meteo Historical Weather | REST JSON | Hourly temp, humidity, wind, rain, pressure | none | Weather history (ERA5 reanalysis) | ✅ |
 | E | Open-Meteo Forecast (`past_days`) | REST JSON | Recent hours not yet in the archive | none | Collector weather | ✅ (same family) |
 | F | Open-Meteo Air Quality | REST JSON | Modeled PM2.5/PM10/NO₂/O₃ + US AQI | none | Optional "model vs ground" comparison | ✅ |
@@ -45,7 +45,8 @@ Status legend: ✅ verified with a real request on 16 Nov 2026 · ⏳ verify at 
 
 - `GET https://api.data.gov.in/resource/3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69?api-key=<key>&format=json&limit=1000&offset=0&filters[state]=Delhi`
 - Publisher: Central Pollution Control Board (MoEFCC). Metadata showed `updated_date: 2026-11-16T10:09:00Z`, so the feed is live.
-- Expected fields (⏳ confirm with our key): `country, state, city, station, last_update, latitude, longitude, pollutant_id, min_value, max_value, avg_value`.
+- ✅ Verified with our key (16 Nov 2026, 17:00 IST snapshot, **3,955 records nationwide**). Fields: `country, state, city, station, last_update` (`DD-MM-YYYY HH:MM:SS` IST), `latitude, longitude, pollutant_id` (`PM2.5, PM10, NO2, SO2, CO, OZONE, NH3`), `min_value, max_value, avg_value`, **all strings**, so cast them in Silver.
+- ⚠️ **Send a browser-like `User-Agent` header.** With the default `python-requests` agent the gateway hangs for 60 s and returns **502**, for valid and invalid keys alike. With a normal UA it returns 200 in under 1 s.
 - ⚠️ **Meaning of `avg_value` must be confirmed** (concentration vs pollutant sub-index) before it goes into any chart. Until then it is stored in Bronze as-is, and Silver labels it per the confirmed meaning.
 - The shared public sample key hit "Rate limit exceeded" during testing. A personal key (free signup) is required.
 - Snapshot only (no history API). AERIS builds its own CPCB history from collector snapshots starting 16 Nov 2026.
