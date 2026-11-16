@@ -2,16 +2,12 @@ resources:
   jobs:
     aeris_pipeline:
       name: aeris_pipeline
-      description: AERIS automation — ingest APIs → ETL pipeline (bronze → silver → gold) → validate → sync to Supabase
+      description: AERIS run, manual — fill missing days + ingest APIs → ETL pipeline (bronze → silver → gold) → validate → sync to Supabase
       tags:
         project: aeris
       performance_target: STANDARD
       max_concurrent_runs: 1
-      # weekly, Thursday 07:00 IST (19 Nov = the day before the demo). Weekly keeps serverless cost low.
-      schedule:
-        quartz_cron_expression: "0 0 7 ? * THU"
-        timezone_id: Asia/Kolkata
-        pause_status: UNPAUSED
+      # manual only (no schedule): run it once on the last day, "databricks bundle run aeris_pipeline"
       email_notifications:
         on_failure:
           - ${workspace.current_user.userName}
@@ -26,8 +22,15 @@ resources:
           min_retry_interval_millis: 60000
           timeout_seconds: 1800
 
+        - task_key: backfill_openaq
+          notebook_task:
+            notebook_path: ../src/notebooks/02_backfill_openaq.py
+          max_retries: 1
+          min_retry_interval_millis: 60000
+          timeout_seconds: 2400
+
         - task_key: etl_bronze_silver_gold
-          depends_on: [{task_key: ingest_batch}]
+          depends_on: [{task_key: ingest_batch}, {task_key: backfill_openaq}]
           pipeline_task:
             pipeline_id: ${resources.pipelines.aeris_etl.id}
 
