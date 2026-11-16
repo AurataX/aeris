@@ -36,22 +36,17 @@
           "projections": [
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "city_daily_aqi"
-                        }
-                      },
-                      "Property": "date_ist"
+                    "SourceRef": {
+                      "Entity": "city_daily_aqi"
                     }
                   },
-                  "Function": 4
+                  "Property": "Days with data"
                 }
               },
-              "queryRef": "Count(city_daily_aqi.date_ist)",
-              "nativeQueryRef": "Count of date_ist"
+              "queryRef": "city_daily_aqi.Days with data",
+              "nativeQueryRef": "Days with data"
             }
           ]
         }

@@ -8,7 +8,7 @@ from visuals import dropdown, textbox, visual  # noqa: E402
 
 D, T, W, P, S = "city_daily_aqi", "dim_date", "weather_pollution_daily", "pollutant_trends", "station_status"
 CITY, YEAR, SEASON = ("c", "dim_city", "city"), ("c", T, "Year"), ("c", T, "Season")
-DAYS = ("a", D, "date_ist", 4)
+DAYS = ("m", D, "Days with data")
 
 
 def header(p, title):

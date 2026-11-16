@@ -9,7 +9,7 @@
     "height": 482
   },
   "visual": {
-    "visualType": "map",
+    "visualType": "scatterChart",
     "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
@@ -32,41 +32,49 @@
             }
           ]
         },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "station_status"
-                    }
-                  },
-                  "Property": "lat"
-                }
-              },
-              "queryRef": "station_status.lat",
-              "nativeQueryRef": "lat",
-              "active": true
-            }
-          ]
-        },
         "X": {
           "projections": [
             {
               "field": {
-                "Column": {
+                "Aggregation": {
                   "Expression": {
-                    "SourceRef": {
-                      "Entity": "station_status"
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "station_status"
+                        }
+                      },
+                      "Property": "lon"
                     }
                   },
-                  "Property": "lon"
+                  "Function": 1
                 }
               },
-              "queryRef": "station_status.lon",
-              "nativeQueryRef": "lon",
-              "active": true
+              "queryRef": "Avg(station_status.lon)",
+              "nativeQueryRef": "Avg of lon"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "station_status"
+                        }
+                      },
+                      "Property": "lat"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Avg(station_status.lat)",
+              "nativeQueryRef": "Avg of lat"
             }
           ]
         },
@@ -109,7 +117,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Monitoring stations'"
+                  "Value": "'Station locations (size = PM2.5)'"
                 }
               }
             }

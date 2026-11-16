@@ -30,6 +30,7 @@ MEASURES = {
          f"SQRT(SUMX(t, ({W}[wind_avg_kmh]-mx)^2) * SUMX(t, ({W}[pm25_avg]-my)^2)))", "0.00", "Weather"),
     ],
     "station_status": [
+        ("Stations in model", "DISTINCTCOUNT(station_status[station_id])", "0", "Stations"),
         ("Stations reporting", "CALCULATE(COUNTROWS(station_status), station_status[is_stale] = FALSE())", "0", "Stations"),
         ("Data freshness (hours)", "DATEDIFF(MAX(station_status[last_observed_at]), UTCNOW(), HOUR)", "0", "Stations"),
     ],
