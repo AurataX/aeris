@@ -40,3 +40,6 @@ apps/collector/dist/
 
 # local scratch
 .sp-entitlement.json
+
+# Power BI Desktop editor preferences
+powerbi/**/.pbi/editorSettings.json

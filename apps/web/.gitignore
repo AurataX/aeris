@@ -44,3 +44,9 @@ next-env.d.ts
 /dist/
 .vinext/
 .cloudflare/
+
+# Local browser sessions
+/.playwright-cli/
+
+# Generated verification screenshots and reports (retained locally)
+/output/

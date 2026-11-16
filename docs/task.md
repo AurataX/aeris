@@ -95,3 +95,18 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [ ] [you] OK → GitHub private repo push
 - [ ] [you] Rehearse `demo-script.md` twice; answer the viva questions without notes
 - [ ] [you] Pause the job trigger and confirm the warehouse is stopped after the demo
+
+## Web handoff implementation — 16 Nov 2026 (local verification)
+
+- [x] Correct Overview observation field (`as_of`), compact responsive cards, real source/index labels, stale-data explanation and highest station indices.
+- [x] Expand How it works and Pipeline: eight-stage architecture, nine-task DAG, API table counts, layer grains/keys, real Delhi NAQI example and evidence boundaries.
+- [x] Trends: city/range controls, accessible daily table, category calendar, wind/PM2.5 scatter and per-city historical insights with missing-value denominators.
+- [x] Light/dark themes, plain sky, self-hosted Satoshi/General Sans, keyboard labels, reduced motion and station search.
+- [x] Runtime Worker public bindings, Supabase `sync_runs` subscription; browser observed **Publication updates connected**. SSE consumer is implemented; Jobs endpoint currently returns 503 so live task updates remain unverified.
+- [x] Dashboard provider switch and supplied Power BI embed URL. Authenticated report contents require user sign-in. Google Map wiring preserves a station-list fallback; local Maps secret is absent, so actual map tiles remain unverified.
+- [x] `npm run build:vinext` passed; `npx next typegen` then `npx tsc --noEmit` passed; 3 data tests passed (gaps, null denominators, formatting). All `src` source files are below 350 words.
+- [x] 36 route/theme/viewport checks: all six routes at 375/768/1280, light/dark, reduced motion; no horizontal overflow. Interaction assertions passed for theme, plain sky, station search, date filter, data table and Power BI binding.
+- [x] Production-preview Lighthouse Overview: **99 performance / 100 accessibility**. This score is for the Overview route only.
+- [x] Deployed with approval: `https://aeris.inerate.com`, version `81d5cfcd-9dce-4187-bb00-cc2799ae4ed1`; 36 production layout checks passed, Lighthouse 95 performance / 100 accessibility, 60 Google Maps station markers.
+
+Evidence: [web validation](web-validation.md), [browser log](../apps/web/output/browser-check.log), [Lighthouse JSON](../apps/web/output/lighthouse.json), [screenshots](../apps/web/output/playwright/), [build log](../apps/web/output/build.log).

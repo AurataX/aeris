@@ -1,0 +1,54 @@
+.city-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.city-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.city-card:first-child {
+  grid-column: span 2;
+}
+.city-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.aqi-number {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.metrics dd {
+  font-size: 14px;
+}
+.city-card footer {
+  border-top: 1px solid var(--hairline);
+  padding-top: 12px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+@media (max-width: 900px) {
+  .city-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .city-card:first-child {
+    grid-column: auto;
+  }
+}
+@media (max-width: 600px) {
+  .city-grid {
+    grid-template-columns: 1fr;
+  }
+}

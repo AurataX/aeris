@@ -1,24 +1,31 @@
-import { Icon } from "@/shared/icons/Icon";
-
-const STEPS = [
-  ["ingest_batch", "Calls the APIs, saves raw JSON"],
-  ["etl_bronze_silver_gold", "Spark pipeline: Bronze → Silver → Gold"],
-  ["validate_gold", "Checks keys, ranges, counts"],
-  ["sync_supabase", "Publishes Gold to the website database"],
-] as const;
-
+const steps = [
+  ["ingest_batch", "Collect station metadata and weather"],
+  ["load_bronze", "Auto Loader reads landed files"],
+  ["silver_stations", "Clean station identities"],
+  ["silver_pollution", "Depends on stations; MERGE observations"],
+  ["silver_weather", "Parallel Silver branch: clean weather"],
+  ["gold_daily", "Compute daily pollutant indices"],
+  ["gold_latest", "Join daily indices and Silver weather"],
+  ["validate_gold", "Check keys, ranges and counts"],
+  ["sync_supabase", "Publish only after validation"],
+];
 export function JobFlow() {
   return (
-    <ol className="grid gap-3 md:grid-cols-4">
-      {STEPS.map(([name, text], i) => (
-        <li key={name} className="surface relative p-5">
-          <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Icon name={i === STEPS.length - 1 ? "check" : "pipeline"} size={18} />
-          </span>
-          <p className="mt-3 font-mono text-sm">{name}</p>
-          <p className="mt-1 text-xs text-ink-3">{text}</p>
-        </li>
-      ))}
-    </ol>
+    <section>
+      <h2 className="section-heading">The nine-task job</h2>
+      <p className="caption mb-4">
+        ingest · Bronze · [stations · pollution · daily | weather] · latest ·
+        validate · sync
+      </p>
+      <ol className="grid gap-3 md:grid-cols-3">
+        {steps.map(([name, text], i) => (
+          <li className="surface p-5" key={name}>
+            <span className="eyebrow">{String(i + 1).padStart(2, "0")}</span>
+            <h3 className="text-sm break-all mt-2">{name}</h3>
+            <p className="caption mt-2">{text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }

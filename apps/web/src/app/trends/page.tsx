@@ -1,42 +1,65 @@
-import { Suspense } from "react";
-import { TrendChart, type Row } from "@/features/trends/TrendChart";
-import { getDaily } from "@/shared/lib/api";
-
-const CITIES = ["Delhi", "Gurugram", "Noida", "Ghaziabad", "Faridabad"];
-
-async function Chart() {
-  const all = await Promise.all(CITIES.map((c) => getDaily(c, 180)));
-  if (all.every((r) => !r)) return <div className="surface p-8 text-ink-2">Trend data is unavailable right now.</div>;
-
-  const byDate = new Map<string, Row>();
-  all.forEach((res, i) =>
-    res?.data.forEach((d) => {
-      const row = byDate.get(d.date_ist) ?? { date: d.date_ist };
-      row[CITIES[i]] = d.naqi;
-      byDate.set(d.date_ist, row);
-    }),
-  );
-  const rows = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
-
-  return (
-    <div className="surface p-6">
-      <TrendChart rows={rows} />
-      <p className="mt-3 text-xs text-ink-3">
-        Daily Indian NAQI (0 to 500) from OpenAQ ground monitors, computed by AERIS. A day needs at least 16 hours of
-        data; days without enough data are left as gaps.
-      </p>
-    </div>
-  );
-}
-
-export default function Trends() {
+import { Calendar } from "@/features/trends/Calendar";
+import { WeatherEvidence } from "@/features/trends/WeatherEvidence";
+import { TrendData } from "@/features/trends/TrendData";
+import { CityInsights } from "@/features/trends/CityInsights";
+const cities = ["Delhi", "Gurugram", "Noida", "Ghaziabad", "Faridabad"];
+export default async function Trends({
+  searchParams,
+}: {
+  searchParams: Promise<{ city?: string; days?: string }>;
+}) {
+  const q = await searchParams;
+  const city = cities.includes(q.city ?? "") ? q.city! : "All";
+  const days = [7, 30, 90, 365].includes(Number(q.days)) ? Number(q.days) : 90;
   return (
     <>
-      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">How the air changes</h1>
-      <p className="mb-8 mt-3 max-w-2xl text-ink-2">Last 180 days, all five cities. Winter smog shows up every year.</p>
-      <Suspense fallback={<div className="surface h-[430px] animate-pulse" />}>
-        <Chart />
-      </Suspense>
+      <p className="eyebrow">PATTERNS, NOT JUST SNAPSHOTS</p>
+      <h1>See beyond today.</h1>
+      <p className="intro">
+        Explore observed city-day indices, historical exceedances and the
+        relationship between pollution and weather.
+      </p>
+      <form className="surface flex flex-wrap gap-4 items-end p-4 mb-6">
+        <label>
+          City
+          <select
+            name="city"
+            defaultValue={city}
+            className="block p-3 bg-bg rounded-xl"
+          >
+            <option>All</option>
+            {cities.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Range
+          <select
+            name="days"
+            defaultValue={days}
+            className="block p-3 bg-bg rounded-xl"
+          >
+            {[7, 30, 90, 365].map((d) => (
+              <option key={d} value={d}>
+                {d} days
+              </option>
+            ))}
+          </select>
+        </label>
+        <button className="text-primary" type="submit">
+          Apply filters ·
+        </button>
+      </form>
+      <TrendData city={city} days={days} />
+      <Calendar city={city === "All" ? "Delhi" : city} />
+      <WeatherEvidence city={city === "All" ? "Delhi" : city} />
+      <h2 className="section-heading">A year of hidden insights</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        {(city === "All" ? cities : [city]).map((c) => (
+          <CityInsights key={c} city={c} />
+        ))}
+      </div>
     </>
   );
 }

@@ -1,38 +1,40 @@
 import { Suspense } from "react";
-import { CityCard } from "@/features/overview/CityCard";
-import { getCities, getDaily } from "@/shared/lib/api";
-
-async function Cards() {
-  const res = await getCities();
-  if (!res) return <Unavailable />;
-  const cities = res.data;
-  const series = await Promise.all(cities.map((c) => getDaily(c.city, 30)));
-
-  return (
-    <div className="grid gap-4 md:grid-cols-4 md:auto-rows-fr">
-      {cities.map((c, i) => (
-        <CityCard key={c.city} city={c} days={series[i]?.data ?? []} large={c.city === "Delhi"} />
-      ))}
-    </div>
-  );
-}
-
-const Unavailable = () => (
-  <div className="surface p-8 text-ink-2">
-    Air-quality data is unavailable right now. The pipeline publishes it to the database; please try again shortly.
-  </div>
-);
-
+import Link from "next/link";
+import { OverviewData } from "@/features/overview/OverviewData";
+import { WorstStations } from "@/features/overview/WorstStations";
 export default function Overview() {
   return (
     <>
-      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Delhi NCR air, right now</h1>
-      <p className="mb-8 mt-3 max-w-2xl text-ink-2">
-        Indian NAQI per city, computed with the CPCB method from 62 ground monitors. Updated whenever the data
-        pipeline finishes a run.
+      <p className="eyebrow">THE AIR WE SHARE</p>
+      <h1>Five cities. One atmosphere.</h1>
+      <p className="intro">
+        Delhi NCR air quality, with the evidence behind every number. Ground
+        measurements, processed with Apache Spark into Indian NAQI.
       </p>
-      <Suspense fallback={<div className="surface h-96 animate-pulse" />}>
-        <Cards />
+      <Suspense
+        fallback={
+          <div className="surface p-8" role="status">
+            Loading city observations...
+          </div>
+        }
+      >
+        <OverviewData />
+      </Suspense>
+      <section className="section-heading">
+        <h2>Behind the numbers</h2>
+        <Link href="/how-it-works">
+          Follow a reading through the pipeline ·
+        </Link>
+      </section>
+      <div className="surface p-6">
+        <p>
+          PM2.5 is a concentration in µg/m³. NAQI is a unitless index combining
+          pollutant sub-indices. A missing index can mean there were too few
+          pollutants to calculate it.
+        </p>
+      </div>
+      <Suspense fallback={<p>Loading stations·</p>}>
+        <WorstStations />
       </Suspense>
     </>
   );
