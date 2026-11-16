@@ -25,7 +25,9 @@ Status legend: ✅ verified with a real request on 16 Nov 2026 · ⏳ verify at 
 8118,23534,"New Delhi-8118","2026-11-12T02:00:00+05:30","28.63576","77.22445","pm25","µg/m³","276.0"
 ```
 
-- Grain: one row per sensor per hour. `datetime` is local time with offset (+05:30) → we convert to UTC.
+- Grain: one row per sensor per **15 minutes** (verified: R K Puram Feb 2025, ~96 rows/day, timestamps at :15). `datetime` is local time with offset (+05:30) → convert to UTC, then aggregate to hourly in Silver.
+- Units as delivered: PM in µg/m³; gases (`no`, `no2`, `o3`, `so2`, `co`) in **ppb**. CO labelled `ppb` averages ~1.3, which is implausible for ppb (likely ppm or mg/m³ mislabelled), so CO is flagged in Silver and excluded from NAQI until verified.
+- **Our copy:** 62 reference monitors (61 CPCB + 1 AirNow; low-cost sensors excluded) → `s3://aeris-lake-072857/openaq-archive/locationid=*/year=2025|2026/` (private, SSE-S3, public access blocked). Read by Unity Catalog external location `aeris_openaq_archive` via storage credential `aeris_s3_read` (IAM role `aeris-uc-s3-read`, read-only, trust locked to the Databricks UC role + external ID).
 - **Lag:** about 4 days (the latest file on 16 Nov was 12 Nov). The collector covers the last few days.
 - Plan: list Delhi NCR location IDs via the API (bbox, see B), then `aws s3 sync` only those prefixes for **Jan 2025 → now** into our bucket `s3://aeris-lake-<suffix>/openaq-archive/`. Exact size is decided after the coverage check.
 - License: varies by provider; recorded per location from `/v3/locations` (`licenses` field).

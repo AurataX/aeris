@@ -96,4 +96,6 @@ npx wrangler deploy
 - Azure Databricks workspace: `https://adb-7405619537081466.6.azuredatabricks.net`. CLI v1.26.0 is logged in (default profile `adb-7405619537081466`); the user is a workspace admin. No SQL warehouse or clusters exist yet.
 - Databricks skills: the `databricks@claude-plugins-official` plugin is enabled. Load `databricks-dabs`, `databricks-jobs`, `databricks-spark-structured-streaming`, `databricks-aibi-dashboards` and `databricks-unity-catalog` before the matching work.
 - Supabase project `aeris`: ref `ttdduchixyhuzpnkodyj`, `https://ttdduchixyhuzpnkodyj.supabase.co`, ap-south-1, free plan (org Tektable). Secret scope `aeris` holds `openaq_api_key` and `data_gov_in_api_key`.
+- SQL Warehouse `aeris-wh` id `5da0413f120f41ed` (serverless 2X-Small, auto-stop 5 min; HTTP path `/sql/1.0/warehouses/5da0413f120f41ed`). Serverless is available.
+- AWS: bucket `aeris-lake-072857` (ap-south-1) → UC external location `aeris_openaq_archive` (`s3://aeris-lake-072857/openaq-archive/`, read-only) via storage credential `aeris_s3_read` / IAM role `aeris-uc-s3-read`.
 - Project volume: `aeris_brick.default.aeris`. Practice volume `aeris_brick.default.apache_spark_data` is off-limits.
