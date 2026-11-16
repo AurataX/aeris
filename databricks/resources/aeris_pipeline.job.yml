@@ -7,9 +7,9 @@ resources:
         project: aeris
       performance_target: STANDARD
       max_concurrent_runs: 1
-      # runs by itself every day at 07:00 IST (dev mode keeps it paused; unpause for the demo)
+      # weekly, Thursday 07:00 IST (19 Nov = the day before the demo). Weekly keeps serverless cost low.
       schedule:
-        quartz_cron_expression: "0 0 7 * * ?"
+        quartz_cron_expression: "0 0 7 ? * THU"
         timezone_id: Asia/Kolkata
         pause_status: UNPAUSED
       email_notifications:
