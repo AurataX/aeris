@@ -26,6 +26,8 @@ async function collect(env: Env, minute: number) {
 }
 
 export default {
+  // opening the URL in a browser: say what this is instead of throwing an error
+  fetch: () => new Response("AERIS collector. It runs on a schedule and has no web page.", { status: 200 }),
   scheduled: (event: ScheduledEvent, env: Env, ctx: ExecutionContext) =>
     ctx.waitUntil(collect(env, new Date(event.scheduledTime).getUTCMinutes())),
 };
