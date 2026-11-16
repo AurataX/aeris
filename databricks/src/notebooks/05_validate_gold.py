@@ -42,8 +42,8 @@ results.append(check("no future dates", aqi.filter("date_ist > current_date() + 
 # COMMAND ----------
 
 tables = [("bronze", "openaq_archive_raw"), ("bronze", "station_raw"), ("bronze", "weather_raw"),
-          ("silver", "stations"), ("silver", "pollutant_observations"), ("silver", "weather_hourly"),
-          ("silver", "quarantine_records")] + [("gold", n) for n in gold_keys]
+          ("silver", "stations"), ("silver", "pollutant_observations"), ("silver", "weather_hourly")] \
+         + [("gold", n) for n in gold_keys]
 stats = spark.createDataFrame(
     [(run_id, f"{layer}.{name}", layer, spark.table(table(layer, name)).count()) for layer, name in tables],
     "run_id string, table_name string, layer string, row_count long",

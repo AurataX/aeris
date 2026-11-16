@@ -55,6 +55,12 @@ Deadline **Fri 20 Nov 2026**. Cut-line order if behind (drop first → last): S3
 - [ ] [claude] **Rerun proof:** second run → identical Silver/Gold counts
 - [ ] [you] Walk through each notebook with [claude]; ask anything you can't explain yet
 
+## Phase 2b — Live ETL pipeline (hybrid, decided 16 Nov)
+
+- [ ] [claude] Lakeflow **Declarative ETL pipeline** `aeris_live_etl` (serverless): collector JSON → streaming Bronze (`live_*`) → Silver live hourly → Gold live latest
+- [ ] [claude] Add it to `aeris_pipeline` as a `pipeline_task`, so the Job orchestrates both the notebook ETL (batch history) and the declarative ETL (live)
+- [ ] [claude] Evidence: pipeline graph screenshot + a run triggered from the job
+
 ## Phase 3 — Serving + streaming (Wed 18 Nov)
 
 - [ ] [claude] `supabase/migrations/0001_serving.sql` applied; advisors clean

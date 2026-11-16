@@ -68,4 +68,27 @@ Us stream ka checkpoint folder delete karo → Auto Loader saari files dobara pa
 
 API ko har 15 min call karna = **polling**, streaming nahi. Streaming part hai Spark ka Auto Loader, jo nayi files ko incrementally process karta hai. Viva mein yeh difference khud bolna: examiners ko honest answer pasand aata hai.
 
+## 14. S3 se Databricks kaise padhta hai (credential vs external location vs connection)
+
+| Cheez | Analogy | AERIS mein |
+|---|---|---|
+| **Storage credential** | 🔑 chabi | `aeris_s3_read` = AWS IAM role `aeris-uc-s3-read` |
+| **External location** | 🚪 kaunsa darwaza khulega | `aeris_openaq_archive` = `s3://aeris-lake-072857/openaq-archive` (read-only) |
+| **Connection** | 🔌 doosre database ka cable (Postgres/MySQL/Snowflake) | S3 ke liye zaroorat nahi |
+
+- Chabi + darwaza dono chahiye. Chabi akeli bekaar, darwaza bina chabi ke band.
+- External location data **save nahi karta**. Woh sirf permission gate hai; files AWS mein hi rehti hain.
+- **Managed volume** (`aeris_brick.default.aeris`) = Databricks ki apni almari (read + write). **External location** = padosi (AWS) ke store-room ki read-only entry.
+- IAM role ka trust sirf Databricks UC role + external ID ko allow karta hai ("confused deputy" protection), aur koi access key kahin store nahi hoti.
+- Data S3 mein kaise aaya: `aws s3 sync` (OpenAQ ka public bucket → hamara private bucket), one-time, server-side, incremental on rerun.
+
+## 15. Notebook files `.py` kyun hain?
+
+`# Databricks notebook source` se shuru hone wali `.py` file Databricks mein **normal notebook** ki tarah khulti hai (cells, Run button, `display()`). Git mein plain text rehti hai, toh diff aur review easy hai. Asset Bundle (`databricks bundle deploy`) inko workspace mein bhejta hai aur job banata hai.
+
+## 16. Silver mein MERGE, Gold mein overwrite: kyun?
+
+- Silver pollution bada hai (~20M raw rows → hourly). Har run sirf **naye bronze rows** (`ingested_at > last`) process karta hai, phir `MERGE`. Pura dobara karna slow hota.
+- Gold chhota hai (5 cities × ~700 din). Har baar **poora recompute + overwrite** simple bhi hai aur idempotent bhi (same input → same output).
+
 *(More notes get added here as each notebook is built and explained.)*
