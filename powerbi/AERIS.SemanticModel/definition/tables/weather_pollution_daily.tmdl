@@ -1,0 +1,85 @@
+table weather_pollution_daily
+	lineageTag: d89ac92d-51bf-48e2-a4e2-c46ec7fc4644
+
+	column city
+		dataType: string
+		lineageTag: 97fe02cf-7432-46b7-adea-b5992ae2bfed
+		summarizeBy: none
+		sourceColumn: city
+
+	column date_ist
+		dataType: dateTime
+		lineageTag: 3f29dada-4ede-4ebc-8e84-a6953dddcd65
+		summarizeBy: none
+		sourceColumn: date_ist
+		formatString: dd mmm yyyy
+
+	column naqi
+		dataType: int64
+		lineageTag: 243f1de8-923c-4f8f-8a3c-20303f228d47
+		summarizeBy: none
+		sourceColumn: naqi
+
+	column pm25_avg
+		dataType: double
+		lineageTag: b0c6bfc0-b6fa-4d09-8bae-0fe928fa8465
+		summarizeBy: sum
+		sourceColumn: pm25_avg
+
+	column pm10_avg
+		dataType: double
+		lineageTag: 223515b6-6a44-47be-80d1-c8816ec78112
+		summarizeBy: sum
+		sourceColumn: pm10_avg
+
+	column temp_avg_c
+		dataType: double
+		lineageTag: 7bd016a8-70a3-4bed-9587-93e9d6f190f1
+		summarizeBy: sum
+		sourceColumn: temp_avg_c
+
+	column humidity_avg_pct
+		dataType: double
+		lineageTag: 7f8434b6-f50a-48aa-9913-57f4e792f70b
+		summarizeBy: sum
+		sourceColumn: humidity_avg_pct
+
+	column wind_avg_kmh
+		dataType: double
+		lineageTag: 4ddafbc3-6c7c-4a93-bd48-d296224386b1
+		summarizeBy: sum
+		sourceColumn: wind_avg_kmh
+
+	column precip_sum_mm
+		dataType: double
+		lineageTag: 71d472fe-bc1a-4c48-9c24-db2a181dbca5
+		summarizeBy: sum
+		sourceColumn: precip_sum_mm
+
+	column pressure_avg_hpa
+		dataType: double
+		lineageTag: 01532987-b7ac-47b7-a91a-5c93dcd06288
+		summarizeBy: sum
+		sourceColumn: pressure_avg_hpa
+
+	column weather_is_modeled
+		dataType: boolean
+		lineageTag: 1ac1ea90-4ed2-4b32-9264-bdf8aab12467
+		summarizeBy: none
+		sourceColumn: weather_is_modeled
+
+	measure 'Pearson r (PM2.5, wind)' = VAR t = FILTER(weather_pollution_daily, NOT ISBLANK(weather_pollution_daily[pm25_avg]) && NOT ISBLANK(weather_pollution_daily[wind_avg_kmh])) VAR mx = AVERAGEX(t, weather_pollution_daily[wind_avg_kmh]) VAR my = AVERAGEX(t, weather_pollution_daily[pm25_avg]) RETURN DIVIDE(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)*(weather_pollution_daily[pm25_avg]-my)), SQRT(SUMX(t, (weather_pollution_daily[wind_avg_kmh]-mx)^2) * SUMX(t, (weather_pollution_daily[pm25_avg]-my)^2)))
+		formatString: 0.00
+		displayFolder: Weather
+		lineageTag: 70245b3f-48be-47a8-a62e-62926f042c35
+
+	partition weather_pollution_daily = m
+		mode: import
+		source =
+			let
+				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+				tbl = schema{[Name = "weather_pollution_daily", Kind = "Table"]}[Data]
+			in
+				tbl

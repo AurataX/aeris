@@ -1,0 +1,43 @@
+table dim_pollutant
+	lineageTag: 4de61769-89ec-453a-ac9a-2e7e9cb337a5
+
+	column pollutant
+		dataType: string
+		lineageTag: 14c6ae60-018f-497d-a93b-112c6094aed8
+		summarizeBy: none
+		sourceColumn: pollutant
+
+	column display_name
+		dataType: string
+		lineageTag: 94b6caa5-8754-45a2-b2ea-1338b2837e48
+		summarizeBy: none
+		sourceColumn: display_name
+
+	column unit
+		dataType: string
+		lineageTag: dcbeefb2-f038-4910-9dc6-980daf441cc7
+		summarizeBy: none
+		sourceColumn: unit
+
+	column naaqs_limit
+		dataType: double
+		lineageTag: 35ea7ebd-ec16-4e12-8f6f-bd1c7369157e
+		summarizeBy: none
+		sourceColumn: naaqs_limit
+
+	column averaging
+		dataType: string
+		lineageTag: eba21b23-9e38-46aa-a662-e1e740a64a0c
+		summarizeBy: none
+		sourceColumn: averaging
+
+	partition dim_pollutant = m
+		mode: import
+		source =
+			let
+				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+				tbl = schema{[Name = "dim_pollutant", Kind = "Table"]}[Data]
+			in
+				tbl

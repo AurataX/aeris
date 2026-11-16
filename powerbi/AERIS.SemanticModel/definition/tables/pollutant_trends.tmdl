@@ -1,0 +1,90 @@
+table pollutant_trends
+	lineageTag: a63e05a7-18e7-42f6-9547-25de1f65e1b5
+
+	column city
+		dataType: string
+		lineageTag: e2cc3494-6fa2-4b5e-b254-bad5c8534308
+		summarizeBy: none
+		sourceColumn: city
+
+	column date_ist
+		dataType: dateTime
+		lineageTag: c0d65414-2816-4103-b070-707721de18dc
+		summarizeBy: none
+		sourceColumn: date_ist
+		formatString: dd mmm yyyy
+
+	column pollutant
+		dataType: string
+		lineageTag: 2aba9ffa-57da-40d2-94d0-22ed07cc37e7
+		summarizeBy: none
+		sourceColumn: pollutant
+
+	column unit
+		dataType: string
+		lineageTag: af5b22bd-7576-40c1-8440-9e6923be1737
+		summarizeBy: none
+		sourceColumn: unit
+
+	column avg_value
+		dataType: double
+		lineageTag: 5cf92059-c69a-469a-b8f4-c2030279af6e
+		summarizeBy: sum
+		sourceColumn: avg_value
+
+	column min_value
+		dataType: double
+		lineageTag: 650e2386-cec2-47b2-9eee-9232ebb62943
+		summarizeBy: sum
+		sourceColumn: min_value
+
+	column max_value
+		dataType: double
+		lineageTag: 18291e11-9771-4df9-b4b6-b85561bc0472
+		summarizeBy: sum
+		sourceColumn: max_value
+
+	column p95_value
+		dataType: double
+		lineageTag: 7e4c63fd-35e8-4cba-97b7-5a05c368fc0c
+		summarizeBy: sum
+		sourceColumn: p95_value
+
+	column hours_covered
+		dataType: int64
+		lineageTag: 4d0b6c18-938d-4515-8553-73695d5bbd54
+		summarizeBy: none
+		sourceColumn: hours_covered
+
+	column exceeds_naaqs
+		dataType: boolean
+		lineageTag: e27c45e6-30a3-46c1-8e96-c400522ed311
+		summarizeBy: none
+		sourceColumn: exceeds_naaqs
+
+	column source
+		dataType: string
+		lineageTag: 50852ad3-d80c-40b8-b2ab-1e7af92d4ec8
+		summarizeBy: none
+		sourceColumn: source
+
+	measure 'Days over NAAQS limit' = CALCULATE(COUNTROWS(pollutant_trends), pollutant_trends[exceeds_naaqs] = TRUE())
+		formatString: 0
+		displayFolder: Pollutants
+		lineageTag: 3c6dc375-6ca8-4bb7-9ed2-0c1524ffc7dd
+
+	measure '% days over NAAQS' = DIVIDE([Days over NAAQS limit], COUNTROWS(pollutant_trends))
+		formatString: 0.0%
+		displayFolder: Pollutants
+		lineageTag: ab69c407-a7a7-4b02-84a8-f3654f4d9826
+
+	partition pollutant_trends = m
+		mode: import
+		source =
+			let
+				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+				tbl = schema{[Name = "pollutant_trends", Kind = "Table"]}[Data]
+			in
+				tbl

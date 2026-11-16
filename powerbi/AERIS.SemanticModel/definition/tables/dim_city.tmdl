@@ -1,0 +1,37 @@
+table dim_city
+	lineageTag: a91c8817-f8c7-4a8a-afed-5dd42e6609c0
+
+	column city
+		dataType: string
+		lineageTag: 0c8299c8-85f8-43db-804a-330dc59fd877
+		summarizeBy: none
+		sourceColumn: city
+
+	column state
+		dataType: string
+		lineageTag: 4ef73823-1c45-460d-b903-f5e8d8a4acc7
+		summarizeBy: none
+		sourceColumn: state
+
+	column lat
+		dataType: double
+		lineageTag: 30c119fa-fc50-4c55-a359-5cfb75206884
+		summarizeBy: none
+		sourceColumn: lat
+
+	column lon
+		dataType: double
+		lineageTag: 2a63d907-d319-45bf-a8b1-11034297af64
+		summarizeBy: none
+		sourceColumn: lon
+
+	partition dim_city = m
+		mode: import
+		source =
+			let
+				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+				tbl = schema{[Name = "dim_city", Kind = "Table"]}[Data]
+			in
+				tbl

@@ -1,0 +1,41 @@
+table dim_date
+	lineageTag: 6cd30d18-00b8-42ca-a726-396b1acb1ca5
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		lineageTag: 097b0f63-153c-4cb5-9872-0db39c255761
+		summarizeBy: none
+		sourceColumn: [Date]
+		isKey
+		formatString: dd mmm yyyy
+
+	column Year
+		dataType: int64
+		lineageTag: e61e9dda-8036-45a5-8f3f-a61cfb5c5ce2
+		summarizeBy: none
+		sourceColumn: [Year]
+
+	column MonthNumber
+		dataType: int64
+		lineageTag: 49b8f533-57d8-4586-9717-b70f191bae31
+		summarizeBy: none
+		sourceColumn: [MonthNumber]
+
+	column Month
+		dataType: string
+		lineageTag: 159480af-a8cb-4158-989a-3bd5f2ead4f4
+		summarizeBy: none
+		sourceColumn: [Month]
+		sortByColumn: MonthNumber
+
+	column Season
+		dataType: string
+		lineageTag: 2453dc02-2bdf-41b5-959a-8e942e00fbd6
+		summarizeBy: none
+		sourceColumn: [Season]
+
+	partition dim_date = calculated
+		mode: import
+		source =
+			ADDCOLUMNS(CALENDAR(DATE(2025, 1, 1), DATE(2026, 12, 31)), "Year", YEAR([Date]), "MonthNumber", MONTH([Date]), "Month", FORMAT([Date], "MMM"), "Season", SWITCH(TRUE(), MONTH([Date]) IN {12, 1, 2}, "Winter", MONTH([Date]) IN {3, 4, 5}, "Summer", MONTH([Date]) IN {6, 7, 8, 9}, "Monsoon", "Post-monsoon"))

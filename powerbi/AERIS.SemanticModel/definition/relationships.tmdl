@@ -1,0 +1,31 @@
+relationship f61d4dc3-3637-4b44-bcee-93b4e9d19672
+	fromColumn: city_daily_aqi.city
+	toColumn: dim_city.city
+
+relationship 763c3586-7136-4fd8-a04d-4a7b0bb970b3
+	fromColumn: pollutant_trends.city
+	toColumn: dim_city.city
+
+relationship 797e1c63-3389-4f9c-93e6-3971c845803f
+	fromColumn: weather_pollution_daily.city
+	toColumn: dim_city.city
+
+relationship 978f51f9-c742-4213-8d85-d1d36ddae769
+	fromColumn: station_status.city
+	toColumn: dim_city.city
+
+relationship 57852b9a-03bc-4255-babf-349075081574
+	fromColumn: city_daily_aqi.date_ist
+	toColumn: dim_date.Date
+
+relationship 668666b3-c52e-405b-aff8-30929b57dec7
+	fromColumn: pollutant_trends.date_ist
+	toColumn: dim_date.Date
+
+relationship 5898a184-34fa-49eb-be2d-9572565f98ae
+	fromColumn: weather_pollution_daily.date_ist
+	toColumn: dim_date.Date
+
+relationship 3c6f4dd8-3b37-41cf-88a9-de826c718272
+	fromColumn: pollutant_trends.pollutant
+	toColumn: dim_pollutant.pollutant

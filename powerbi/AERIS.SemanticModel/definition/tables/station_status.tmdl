@@ -1,0 +1,114 @@
+table station_status
+	lineageTag: 7a29a0b9-1c1b-40de-bd80-b182dfa723f1
+
+	column station_id
+		dataType: string
+		lineageTag: d582180a-7129-4bf8-b7c4-18cc44326d79
+		summarizeBy: none
+		sourceColumn: station_id
+
+	column name
+		dataType: string
+		lineageTag: 7960a8b9-5255-4a28-ad75-a762225f5d73
+		summarizeBy: none
+		sourceColumn: name
+
+	column city
+		dataType: string
+		lineageTag: c4bf96a6-7a09-4d5a-9fc7-89df1503c29d
+		summarizeBy: none
+		sourceColumn: city
+
+	column lat
+		dataType: double
+		lineageTag: 7f18a440-aa45-423c-809c-438a9dc5da69
+		summarizeBy: none
+		sourceColumn: lat
+
+	column lon
+		dataType: double
+		lineageTag: f198a1dd-9d84-4cfb-a83f-052abf766584
+		summarizeBy: none
+		sourceColumn: lon
+
+	column provider
+		dataType: string
+		lineageTag: e6221d22-d44a-4fa0-993b-4a193362f728
+		summarizeBy: none
+		sourceColumn: provider
+
+	column last_observed_at
+		dataType: dateTime
+		lineageTag: fbb7e668-535e-46b7-9136-2d23d003b030
+		summarizeBy: none
+		sourceColumn: last_observed_at
+		formatString: dd mmm yyyy
+
+	column pm25_latest
+		dataType: double
+		lineageTag: f34e18e0-8ab0-488c-b867-afa2fab724b6
+		summarizeBy: sum
+		sourceColumn: pm25_latest
+
+	column pm10_latest
+		dataType: double
+		lineageTag: 3a06cf3f-d054-478e-8704-2b472926edd0
+		summarizeBy: sum
+		sourceColumn: pm10_latest
+
+	column no2_latest
+		dataType: double
+		lineageTag: 4dbd2ea1-af56-422f-825e-56767038f1e0
+		summarizeBy: sum
+		sourceColumn: no2_latest
+
+	column o3_latest
+		dataType: double
+		lineageTag: 052185aa-c076-443d-bef4-51c79affb1f6
+		summarizeBy: sum
+		sourceColumn: o3_latest
+
+	column naqi_24h
+		dataType: int64
+		lineageTag: 33f5edf1-60bf-47b8-a2b3-378890db461f
+		summarizeBy: none
+		sourceColumn: naqi_24h
+
+	column naqi_category
+		dataType: string
+		lineageTag: 1859af21-de3a-4b88-a890-b63278fb3654
+		summarizeBy: none
+		sourceColumn: naqi_category
+
+	column is_stale
+		dataType: boolean
+		lineageTag: 19490bfa-9d5a-4b49-b4c8-a33dd0e4e34e
+		summarizeBy: none
+		sourceColumn: is_stale
+
+	column source
+		dataType: string
+		lineageTag: 9a5921e5-5f85-4d5f-9da8-e22baab24c92
+		summarizeBy: none
+		sourceColumn: source
+
+	measure 'Stations reporting' = CALCULATE(COUNTROWS(station_status), station_status[is_stale] = FALSE())
+		formatString: 0
+		displayFolder: Stations
+		lineageTag: bfe51a8d-033a-430b-bd48-3bd7eb5de54f
+
+	measure 'Data freshness (hours)' = DATEDIFF(MAX(station_status[last_observed_at]), UTCNOW(), HOUR)
+		formatString: 0
+		displayFolder: Stations
+		lineageTag: 3244aa1e-1017-46f9-a425-0bfce57e1b45
+
+	partition station_status = m
+		mode: import
+		source =
+			let
+				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+				tbl = schema{[Name = "station_status", Kind = "Table"]}[Data]
+			in
+				tbl

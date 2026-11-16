@@ -1,0 +1,143 @@
+table city_daily_aqi
+	lineageTag: 832c59d7-a912-4116-8564-a92df836a94e
+
+	column city
+		dataType: string
+		lineageTag: fcc95c9a-54ac-42c2-9ddc-ee9aa7faccdb
+		summarizeBy: none
+		sourceColumn: city
+
+	column date_ist
+		dataType: dateTime
+		lineageTag: 711668be-eb6b-4622-8be9-49d5854ef856
+		summarizeBy: none
+		sourceColumn: date_ist
+		formatString: dd mmm yyyy
+
+	column naqi
+		dataType: int64
+		lineageTag: 0760bb64-b635-45f2-b913-e7d91c2582df
+		summarizeBy: none
+		sourceColumn: naqi
+
+	column naqi_category
+		dataType: string
+		lineageTag: baffbcb6-f38b-4d8d-929a-478f30c9c453
+		summarizeBy: none
+		sourceColumn: naqi_category
+
+	column dominant_pollutant
+		dataType: string
+		lineageTag: 280f5394-77de-4a96-9a7a-246acce30c3f
+		summarizeBy: none
+		sourceColumn: dominant_pollutant
+
+	column pollutants_used
+		dataType: int64
+		lineageTag: f341f134-5b8c-452a-af58-78531a636c43
+		summarizeBy: none
+		sourceColumn: pollutants_used
+
+	column pm25_avg
+		dataType: double
+		lineageTag: d79d354a-8771-49e3-8ac3-69143bc7f7e0
+		summarizeBy: sum
+		sourceColumn: pm25_avg
+
+	column pm10_avg
+		dataType: double
+		lineageTag: 4dff7588-f4fb-45a8-a00c-63bc05dd5d01
+		summarizeBy: sum
+		sourceColumn: pm10_avg
+
+	column no2_avg
+		dataType: double
+		lineageTag: cf120e89-f228-4e7d-94ef-db86eb588696
+		summarizeBy: sum
+		sourceColumn: no2_avg
+
+	column so2_avg
+		dataType: double
+		lineageTag: 14cb9f5a-15ab-4705-a6ca-e8187571c5e1
+		summarizeBy: sum
+		sourceColumn: so2_avg
+
+	column o3_max8h
+		dataType: double
+		lineageTag: 4df5a957-0ec0-4074-8286-8c456a892cf5
+		summarizeBy: sum
+		sourceColumn: o3_max8h
+
+	column stations_count
+		dataType: int64
+		lineageTag: 276a6a9f-5537-47ac-b49e-f6f4a386c7d5
+		summarizeBy: none
+		sourceColumn: stations_count
+
+	column index_standard
+		dataType: string
+		lineageTag: acdb91bd-c7f1-4ea4-bdb6-e544c3e776b4
+		summarizeBy: none
+		sourceColumn: index_standard
+
+	column source
+		dataType: string
+		lineageTag: 5ee10d8a-ddde-4fdc-bcdd-20ab1eb258e4
+		summarizeBy: none
+		sourceColumn: source
+
+	measure 'NAQI (avg)' = AVERAGE(city_daily_aqi[naqi])
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 8828be14-ffb0-41a9-8f77-52d22d25a957
+
+	measure 'NAQI (peak)' = MAX(city_daily_aqi[naqi])
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: dfe3dd91-a25e-4515-9e38-fa835c08a2a0
+
+	measure 'Very Poor+ days' = CALCULATE(COUNTROWS(city_daily_aqi), city_daily_aqi[naqi] > 300)
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: c9f7d5c2-bf9e-470d-94cc-8cec5ad18847
+
+	measure 'Days with data' = CALCULATE(COUNTROWS(city_daily_aqi), NOT ISBLANK(city_daily_aqi[naqi]))
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: 0dbdc1a0-d874-4556-af83-1b0afe06dee1
+
+	measure '% days Very Poor+' = DIVIDE([Very Poor+ days], [Days with data])
+		formatString: 0.0%
+		displayFolder: AQI
+		lineageTag: decc13c8-9167-477f-bf8d-af8874b545fb
+
+	measure 'NAQI 7-day rolling' = AVERAGEX(DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY), [NAQI (avg)])
+		formatString: 0
+		displayFolder: AQI
+		lineageTag: c5a56d83-8083-402b-b0e3-c88c10e8f327
+
+	measure 'NAQI vs last month' = [NAQI (avg)] - CALCULATE([NAQI (avg)], DATEADD(dim_date[Date], -1, MONTH))
+		formatString: +0;-0;0
+		displayFolder: AQI
+		lineageTag: 6660df77-bb34-4a16-81dc-687761322d1c
+
+	measure 'PM2.5 avg' = AVERAGE(city_daily_aqi[pm25_avg])
+		formatString: 0.0
+		displayFolder: Pollutants
+		lineageTag: ac05362a-074d-4a94-8568-c96543af5b24
+
+	measure 'PM10 avg' = AVERAGE(city_daily_aqi[pm10_avg])
+		formatString: 0.0
+		displayFolder: Pollutants
+		lineageTag: 03d44bd8-806b-4535-bffa-217f326269fd
+
+	partition city_daily_aqi = m
+		mode: import
+		source =
+			let
+				Source = Databricks.Catalogs("adb-7405619537081466.6.azuredatabricks.net", "/sql/1.0/warehouses/5da0413f120f41ed", [Catalog = "aeris_brick", Database = null, EnableAutomaticProxyDiscovery = null]),
+				db = Source{[Name = "aeris_brick", Kind = "Database"]}[Data],
+				schema = db{[Name = "gold", Kind = "Schema"]}[Data],
+				tbl = schema{[Name = "city_daily_aqi", Kind = "Table"]}[Data]
+			in
+				tbl
