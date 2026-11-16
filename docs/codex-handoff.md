@@ -12,7 +12,7 @@ The data engineering, API and deployment are done. Your job is the **front end o
 - Real data only. Never invent a number, station, date or chart value. Missing data stays missing and is labelled.
 - PM2.5 is not AQI. Always show `index_standard` and `source` next to an index value. Say "live" only where data is really live (the latest Gold data may be days old; show its `as_of`).
 - Design follows `docs/design.md`: "the sky is the interface", Liquid Glass on chrome only (dock, utility cluster, sheets), data cards high-opacity, light first with a dark theme, all colours from tokens on `:root[data-theme]`, CPCB category colours reserved for data. Fonts Satoshi + General Sans (self-hosted). **Custom SVG icons only, no Lucide.** Respect `prefers-reduced-motion`. Use `motion` layoutId/spring for shared-element moves, count-ups once.
-- Code laws: **max 250 words per source file (hard cap 350)**, one responsibility per file, Server Components fetch the API with `next: { revalidate: 300, tags: ['gold'] }`, **no browser polling** (Supabase Realtime on `sync_runs` then `router.refresh()`; SSE for the pipeline page). Ponytail style: least code that fully works, no speculative abstractions.
+- Code laws: **max 250 words per source file (hard cap 350)**, one responsibility per file, Server Components fetch the API with `next: { revalidate: 3600, tags: ['gold'] }`, **no browser polling** (Supabase Realtime on `sync_runs` then `router.refresh()`; SSE for the pipeline page). Ponytail style: least code that fully works, no speculative abstractions.
 - Comments short and human. No AI attribution in commits or PRs (commits are authored by the student).
 
 ### 2. Deployment facts (so you do not break it)
@@ -42,3 +42,6 @@ The data engineering, API and deployment are done. Your job is the **front end o
 
 ## What is not finished (not Codex's job)
 - Power BI embed URL (student will supply), Google Maps key/Map ID (student), "Run pipeline" button needs a Databricks service-principal secret on the API, optional.
+
+## Cache note (Cloudflare KV free limit)
+KV on the free plan allows about 1,000 writes a day. The data changes once a day and the pipeline calls `/api/revalidate`, so the TTL in `src/shared/lib/api.ts` is now 3600 s (`cacheLife` revalidate 3600, expire 86400). Keep it long; do not go back to 300 s and do not add polling.

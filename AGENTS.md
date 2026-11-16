@@ -59,7 +59,7 @@ prompt/            original briefs + practice notebook (do not edit)
 - **250-word budget per source file** (hard cap 350). Split by responsibility. Docs, migrations, JSON/YAML and generated files are exempt. Notebooks are thin and readable, one layer per notebook.
 - **PySpark, not Scala.** Use built-in functions and Spark SQL, and **no UDFs** where a built-in exists. Show `printSchema()` and row counts before and after each step. Keep comments short and human, in the style of `prompt/First_PR.clean.ipynb`. Long explanations go in `docs/learning.md`.
 - **Idempotent writes.** Delta `MERGE` on business keys. Supabase uses `INSERT … ON CONFLICT DO UPDATE`. A rerun must not change row counts.
-- **Data fetching (web):** Server Components fetch FastAPI with `next: { revalidate: 300, tags: ['gold'] }`. Freshness comes from `revalidateTag` (called by the sync task) + Supabase Realtime → `router.refresh()`. The pipeline page uses SSE. **No browser polling.**
+- **Data fetching (web):** Server Components fetch FastAPI with `next: { revalidate: 3600, tags: ['gold'] }`. Freshness comes from `revalidateTag` (called by the sync task) + Supabase Realtime → `router.refresh()`. The pipeline page uses SSE. **No browser polling.**
 - **FastAPI:** async (asyncpg/httpx), thin `endpoints/` → `services/` → `core/`, Pydantic v2, managed with `uv`.
 - **UI:** follow [docs/design.md](docs/design.md). Use **custom SVG icons only (no Lucide)**. All colors come from tokens. Respect `prefers-reduced-motion`.
 - **Tests:** every non-trivial module leaves one small check (pytest, or asserts in `05_validate_gold`).
