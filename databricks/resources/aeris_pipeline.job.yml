@@ -7,6 +7,11 @@ resources:
         project: aeris
       performance_target: STANDARD
       max_concurrent_runs: 1
+      # runs by itself every day at 07:00 IST (dev mode keeps it paused; unpause for the demo)
+      schedule:
+        quartz_cron_expression: "0 0 7 * * ?"
+        timezone_id: Asia/Kolkata
+        pause_status: UNPAUSED
       email_notifications:
         on_failure:
           - ${workspace.current_user.userName}
