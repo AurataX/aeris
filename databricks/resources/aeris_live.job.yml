@@ -6,6 +6,7 @@ resources:
       tags:
         project: aeris
       performance_target: STANDARD
+      timeout_seconds: 3000 # hard stop at 50 min
       max_concurrent_runs: 1
       # PAUSED = no cost until you unpause it for a demo
       trigger:

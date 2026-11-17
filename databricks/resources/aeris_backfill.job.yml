@@ -6,6 +6,7 @@ resources:
       tags:
         project: aeris
       performance_target: STANDARD
+      timeout_seconds: 3600 # hard stop at 1 hour
       tasks:
         - task_key: backfill
           notebook_task:

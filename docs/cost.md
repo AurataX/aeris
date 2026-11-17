@@ -13,7 +13,7 @@ The **website never touches it**; it reads Supabase. So the warehouse only runs 
 | Setting | Value |
 |---|---|
 | Type / size | Serverless, **2X-Small** (smallest) |
-| Auto-stop | **5 min** idle |
+| Auto-stop | **1 min** idle (the minimum) |
 | Scaling | min 1 / max 1 cluster |
 | Price basis | ~4 DBU/h → **≈ $2.80/hour while running** (Azure's published example rate; your region and contract may differ). Billed per second; $0 while stopped |
 | Expected use | dashboard build 2–3 h + Power BI refreshes (~10 × 3 min) + demo ~1 h → **~4–6 h ≈ $11–17 total** |
@@ -22,7 +22,7 @@ The **website never touches it**; it reads Supabase. So the warehouse only runs 
 
 | Item | Driver | Estimate (week) | Guardrail |
 |---|---|---|---|
-| SQL Warehouse | hours running | $11–17 | 5-min auto-stop; Power BI in Import mode, never DirectQuery |
+| SQL Warehouse | hours running | $11–17 | 1-min auto-stop; Power BI in Import mode, never DirectQuery |
 | Job runs (serverless jobs compute) | minutes per run × runs | a few dollars | file-arrival trigger **paused** except during demos; ≥ 30 min between triggered runs; `availableNow` (no always-on stream) |
 | Notebook dev compute | interactive minutes | a few dollars | serverless notebooks or a single-node cluster with 15-min auto-termination |
 | S3 | ~0.3–1 GB storage + one-time cross-cloud read | < $1 | NCR subset only; Block Public Access on |

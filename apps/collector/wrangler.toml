@@ -3,7 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2026-11-01"
 
 [triggers]
-crons = ["*/30 * * * *", "15,45 * * * *"]
+# CPCB slot is :06/:36, not :00/:30, because data.gov.in is busy refreshing right on the hour/half hour
+crons = ["6,36 * * * *", "15,45 * * * *"]
 
 # Observability: Cloudflare keeps the Worker's logs and one log line per cron run, searchable in the dashboard.
 # head_sampling_rate = 1 means keep every invocation (we only run ~96 times a day, so it is cheap).
@@ -13,10 +14,8 @@ head_sampling_rate = 1
 
 [vars]
 DATABRICKS_HOST = "https://adb-7405619537081466.6.azuredatabricks.net"
+SUPABASE_URL = "https://ttdduchixyhuzpnkodyj.supabase.co"
 
 # secrets (set with `npx wrangler secret put <NAME>`): DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET,
-# OPENAQ_API_KEY, DATA_GOV_IN_API_KEY
+# OPENAQ_API_KEY, CPCB_PROXY_TOKEN (the data.gov.in key now lives only in the Supabase function)
 
-# data.gov.in (CPCB) refuses Cloudflare's overseas servers (error 521). Run the Worker near Mumbai instead.
-[placement]
-region = "aws:ap-south-1"

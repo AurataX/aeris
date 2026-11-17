@@ -6,6 +6,7 @@ resources:
       tags:
         project: aeris
       performance_target: STANDARD
+      timeout_seconds: 3000 # hard stop at 50 min (normal run ~33 min)
       max_concurrent_runs: 1
       # manual only (no schedule). The live collector keeps landing new readings, so no backfill is needed here. Run: databricks bundle run aeris_pipeline
       email_notifications:

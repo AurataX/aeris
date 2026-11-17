@@ -14,7 +14,7 @@ async function collect(env: Env, minute: number) {
   ];
   if (group === 0) {
     for (const state of cpcbStates) {
-      jobs.push(cpcbState(env.DATA_GOV_IN_API_KEY, state).then((p) => land(env, bearer, "cpcb", p, `,"state":"${state}"`)));
+      jobs.push(cpcbState(env.SUPABASE_URL, env.CPCB_PROXY_TOKEN, state).then((p) => land(env, bearer, "cpcb", p, `,"state":"${state}"`)));
     }
   } else {
     for (const city of Object.keys(CITIES)) {

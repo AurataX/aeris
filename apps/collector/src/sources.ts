@@ -17,8 +17,9 @@ export async function openaqLatest(apiKey: string, group: number): Promise<strin
   return `[${parts.join(",")}]`;
 }
 
-export const cpcbState = (apiKey: string, state: string) =>
-  getText(`https://api.data.gov.in/resource/${CPCB_RESOURCE}?api-key=${apiKey}&format=json&limit=1000&filters[state]=${encodeURIComponent(state)}`);
+// data.gov.in answers 521 to Cloudflare Workers, so we ask our Supabase Edge Function (AWS Mumbai) to fetch it.
+export const cpcbState = (supabaseUrl: string, proxyToken: string, state: string) =>
+  getText(`${supabaseUrl}/functions/v1/cpcb?state=${encodeURIComponent(state)}`, { "x-aeris-token": proxyToken, "x-region": "ap-south-1" }); // data.gov.in only accepts connections from India, so pin the function to Mumbai
 
 export const cpcbStates = CPCB_STATES;
 

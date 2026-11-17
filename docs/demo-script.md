@@ -53,4 +53,4 @@ Insight jo bol sakte ho: hawa sabse saaf monsoon mein (Aug ≈ 95 NAQI) aur sabs
 
 ## After the demo
 
-Warehouse auto-stop 5 min mein ho jata hai. Job schedule ON rehne do (cost chhota hai) ya pause kar do.
+Warehouse auto-stop 1 min mein ho jata hai. Job schedule ON rehne do (cost chhota hai) ya pause kar do.

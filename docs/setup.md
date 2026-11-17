@@ -41,7 +41,7 @@ databricks secrets put-secret aeris revalidate_secret
 
 **Service principal** (for the collector + FastAPI, so no personal token in a server): *Settings → Identity → Service principals → Add* `aeris-automation` → generate an OAuth secret → grant `WRITE VOLUME` on `aeris_brick.default.aeris` and `CAN MANAGE RUN` on the job. Fallback if you're not an admin: a personal access token with a short expiry (documented as a shortcut).
 
-**SQL Warehouse** (billable, so ask first): serverless, 2X-Small, auto-stop 5 min, max 1 cluster, name `aeris-wh`.
+**SQL Warehouse** (billable, so ask first): serverless, 2X-Small, auto-stop 1 min, max 1 cluster, name `aeris-wh`.
 
 ## 2. API keys ★
 

@@ -1,6 +1,6 @@
 # Dashboards — Databricks AI/BI + Power BI
 
-Both read **Gold** through one **SQL Warehouse** (serverless 2X-Small, 5-min auto-stop). The web app does **not** use the warehouse; it reads Supabase.
+Both read **Gold** through one **SQL Warehouse** (serverless 2X-Small, 1-min auto-stop). The web app does **not** use the warehouse; it reads Supabase.
 
 ## 1. Databricks AI/BI dashboard ("dashboard as code")
 

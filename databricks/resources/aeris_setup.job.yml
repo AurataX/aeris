@@ -6,6 +6,7 @@ resources:
       tags:
         project: aeris
       performance_target: STANDARD
+      timeout_seconds: 900 # kill the run if it hangs (normal run ~6 min)
       tasks:
         - task_key: setup
           notebook_task:

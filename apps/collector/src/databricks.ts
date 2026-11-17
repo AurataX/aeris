@@ -5,7 +5,8 @@ export interface Env {
   DATABRICKS_CLIENT_ID: string;
   DATABRICKS_CLIENT_SECRET: string;
   OPENAQ_API_KEY: string;
-  DATA_GOV_IN_API_KEY: string;
+  SUPABASE_URL: string;
+  CPCB_PROXY_TOKEN: string;
 }
 
 // OAuth machine-to-machine token for the collector service principal
