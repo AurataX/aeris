@@ -56,4 +56,6 @@ supabase/     migrations     powerbi/   AERIS.pbip     docs/  everything explain
 
 ## Data sources
 
+For a plain-language explanation of each dataset, why it was selected, and how the Power BI tables connect, read the [dataset README](powerbi/README.md).
+
 [OpenAQ](https://openaq.org) (license per data provider, returned by the API) · [CPCB via data.gov.in](https://www.data.gov.in/catalog/real-time-air-quality-index) (GODL-India) · [Open-Meteo](https://open-meteo.com) (CC BY 4.0) · [Google Air Quality API](https://developers.google.com/maps/documentation/air-quality) (display only). Details and attribution are in [docs/data-sources.md](docs/data-sources.md).
