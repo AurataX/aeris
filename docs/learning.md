@@ -92,3 +92,41 @@ API ko har 15 min call karna = **polling**, streaming nahi. Streaming part hai S
 - Gold chhota hai (5 cities × ~700 din). Har baar **poora recompute + overwrite** simple bhi hai aur idempotent bhi (same input → same output).
 
 *(More notes get added here as each notebook is built and explained.)*
+
+## 17. Job, ETL pipeline, dashboard: ye sab define kaise hote hain?
+
+**Teen tarike hote hain:** (1) GUI, (2) YAML file (Asset Bundle), (3) code. College practical me GUI chalta hai. Real projects me YAML/code, kyunki git me rehta hai, review ho sakta hai, aur ek command se dobara ban jata hai. AERIS me sab YAML + code hai, GUI sirf dekhne ke liye.
+
+### Job (manager) — `databricks/resources/aeris_pipeline.job.yml`
+- Har step ek `task` hai. Order `depends_on` se tay hota hai.
+- Order: `ingest_batch` (notebook) → `etl_bronze_silver_gold` (`pipeline_task`, yaha ETL pipeline chalti hai) → `validate_gold` (notebook) → `sync_supabase` (notebook).
+- GUI me wahi cheez Jobs → Create job → Add task se banti. YAML = wahi GUI ka text version.
+- Deploy: `databricks bundle deploy`. Run: `databricks bundle run aeris_pipeline`.
+
+### ETL pipeline (transformation engine) — `resources/aeris_etl.pipeline.yml`
+- YAML me **steps nahi likhte**. Sirf bolte hain "`src/etl/**` ki sab files le lo" (`libraries: glob: include`).
+- Koi "main file" nahi hai. Koi file baaki ko import ya start nahi karti.
+- Har file me `@dp.materialized_view(...)` ya `@dp.temporary_view` wale functions hote hain. Ek function = ek table.
+- Function ke andar `spark.read.table("silver.stations")` jaisa padhne ka code hota hai. Databricks isi se dekhta hai: "ye table us table se bani hai" aur **arrow (line)** khud bana deta hai.
+- Isko **declarative** kehte hain: tum batate ho "kya chahiye", order Databricks nikalta hai. Isliye Image 8 ka graph tumne nahi banaya, files ke `read.table` se automatically bana.
+- `@dp.expect_or_drop(...)` = data quality rule (bad row hata do).
+
+### Lazy execution aur DAG
+- Spark ke transformations **lazy** hote hain: `filter`, `join`, `groupBy` turant nahi chalte. Pehle sirf plan (DAG) banta hai, `write`/`display` pe chalta hai.
+- Pipeline isi idea ko table level pe use karti hai: pehle poora DAG (graph) banta hai, phir sahi order me run hota hai, jo tables independent hain wo parallel chalti hain.
+- Graph padh ke flow samajh aata hai: left = bronze (raw), beech = silver (clean), right = gold (final).
+
+### Orchestrator vs transformation
+- **Orchestrator (Job):** kya, kab, kis order me. Notebooks, pipeline, retry, timeout, schedule, email.
+- **Transformation (ETL pipeline):** tables ka data badalna (bronze → silver → gold).
+- Job pipeline ko ek step ki tarah chalata hai.
+
+### Dashboard — `resources/aeris.dashboard.yml` + `dashboards/aeris.lvdash.json`
+- Databricks AI/BI dashboard ka poora design ek JSON file (`.lvdash.json`) hai: `datasets` (SQL queries), `pages` (widgets, layout).
+- Wo JSON GUI se bhi export hota hai aur code se bhi likha ja sakta hai. AERIS me hum ne JSON likha, YAML ne usse `warehouse_id` ke saath bundle me jodha, aur `bundle deploy` se dashboard ban gaya.
+- GUI me banane ke baad edit bhi kar sakte ho. Phir bundle se dobara deploy karoge to file wala version wapas aa jayega.
+- Dashboard chalne par SQL warehouse start hota hai (cost). Auto-stop 1 min hai.
+
+### College practical me kya chunein?
+- Seekhne ke liye: GUI (Workflows → Create job, Pipelines → Create ETL pipeline).
+- Project/demo me: YAML + bundle. Bol sakte ho: "Infrastructure as Code, git me version, ek command se deploy".
