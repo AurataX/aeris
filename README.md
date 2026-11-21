@@ -15,7 +15,7 @@ Every November and December the air in Delhi NCR turns "Very Poor" or "Severe". 
 
 | Member | Part |
 |---|---|
-| **Piyush** | Data collection (ingestion), the ETL pipeline `aeris_etl` (Bronze, Silver, Gold) and the Lakeflow Job `aeris_pipeline` |
+| **Piyush** | Dataset collection from multiple sources (OpenAQ API and archive, CPCB via data.gov.in, and Open-Meteo), data ingestion, the ETL pipeline `aeris_etl` (Bronze, Silver, Gold), the Lakeflow Job `aeris_pipeline`, and all other project contributions not listed below |
 | **Bhumika** | Dashboards: Databricks AI/BI dashboard and the Power BI report (`powerbi/AERIS.pbip`) |
 | **Yashraj** | ETL pipeline `aeris_etl` (Bronze, Silver, Gold), plus the website: Next.js frontend (Vercel) and FastAPI backend (Cloud Run) on Supabase |
 
